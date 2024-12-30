@@ -1,0 +1,1 @@
+I'm trying to implement a hashing function that utilizes the Sieve of Atkins to generate a prime modulus which is then used in polynomial rolling of string keys. Please send a script example of how to implement this hash function in python

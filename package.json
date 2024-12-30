@@ -1,0 +1,19 @@
+{
+  "name": "outlier-code",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run -c ./vitest.server.config.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "eslint": "^9.17.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "vitest-extended": "^0.0.1"
+  }
+}

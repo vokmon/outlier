@@ -1,0 +1,503 @@
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test schema ที่สร้างจาก zod framework สำหรับ schema ที่มีชื่อว่า userSigninSchema โดยที่ schema userSigninSchema เป็นการเลือก property จาก userSignupSchema
+
+attribute ที่ userSigninSchema เลือก ประกอบด้วย
+email ต้องเป็นformat ที่ถูกต้องและต้องใส่มา zod framework สามารถจัดการเรื่อง format ได้ 
+password ต้องมีอย่างน้อย 6 ตัว และต้องใส่มาให้
+
+การทดสอบ schema ให้ใช้คำสั่ง schema.parse(value) เพื่อทดสอบ ถ้าค่าที่ใส่ให้ไม่ตรงกับ schema จะมี error เกิดขึ้น สามารถใช้ error ที่เกิดขึ้นทดสอบได้ว่าค่าที่ส่งให้ผิด ถ้าไม่มี error เกิดขึ้นแสดงว่าส่งค่ามาถูกต้อง
+
+export const userSignupSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+  })
+  .strict();
+
+
+export const userSigninSchema = userSignupSchema
+  .pick({
+    email: true,
+    password: true,
+  })
+  .strict();
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ เป็น comment ใน test case ไปเลย
+และใส่วิธีการรัน ทดสอบ test cases ตาม vitest framework ด้วย
+
+
+
+Response
+เพื่อทดสอบ userSigninSchema ด้วย Vitest framework ใน JavaScript เราสามารถสร้าง test case ที่ตรวจสอบความถูกต้องของ schema ที่สร้างจาก Zod framework ด้านล่างนี้เป็นตัวอย่างโค้ดในการทดสอบ พร้อมคำอธิบายและวิธีการรันการทดสอบ
+
+import { userSigninSchema } from "path-to-your-schema"; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("userSigninSchema", () => {
+  it("should pass with valid email and password", () => {
+    const validData = {
+      email: "test@example.com",
+      password: "password123",
+    };
+
+    // ค่าที่ส่งตรงกับ schema ควรจะไม่มี error เกิดขึ้น
+    expect(() => userSigninSchema.parse(validData)).not.toThrow();
+  });
+
+  it("should fail with invalid email format", () => {
+    const invalidEmailData = {
+      email: "invalid-email",
+      password: "password123",
+    };
+
+    // ค่าที่ใส่ให้มี format email ที่ไม่ถูกต้อง ควรจะเกิด error
+    expect(() => userSigninSchema.parse(invalidEmailData)).toThrow(
+      /Invalid email address/
+    );
+  });
+
+  it("should fail with short password", () => {
+    const shortPasswordData = {
+      email: "test@example.com",
+      password: "short",
+    };
+
+    // ค่าที่ใส่มี password ที่สั้นเกินไป ควรจะเกิด error
+    expect(() => userSigninSchema.parse(shortPasswordData)).toThrow(
+      /Password must be at least 6 characters long/
+    );
+  });
+
+  it("should fail when email is missing", () => {
+    const missingEmailData = {
+      password: "password123",
+    };
+
+    // ค่าที่ส่งไม่มี email ควรจะเกิด error
+    expect(() => userSigninSchema.parse(missingEmailData)).toThrow('Required');
+  });
+
+  it("should fail when password is missing", () => {
+    const missingPasswordData = {
+      email: "test@example.com",
+    };
+
+    // ค่าที่ส่งไม่มี password ควรจะเกิด error
+    expect(() => userSigninSchema.parse(missingPasswordData)).toThrow('Required');
+  });
+});
+
+วิธีการรันทดสอบด้วย Vitest framework:
+
+ติดตั้ง dependencies:
+
+เริ่มต้นด้วยการติดตั้ง Vitest และ Zod ในโปรเจคของคุณ:
+npm install vitest zod
+
+ตั้งค่า Vitest:
+ในไฟล์ package.json ให้เพิ่ม script สำหรับรัน Vitest:
+
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+
+รันทดสอบ:
+คุณสามารถรันทดสอบทั้งหมดโดยใช้คำสั่ง:
+
+npm run test
+คำสั่งนี้จะรัน test cases ที่กำหนดไว้ในโปรเจคโดยใช้ Vitest framework
+
+ด้วยขั้นตอนนี้, คุณจะสามารถทดสอบความถูกต้องของ userSigninSchema ที่สร้างจาก Zod โดยใช้ Vitest framework จากผลลัพธ์ที่ปรากฎบน console ที่ทดสอบได้
+
+
+
+
+
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test schema function matchRoles
+โดยที่ function นี้ทำหน้าที่ในการตรวจสอบว่า actions ที่ user มีสิทธิ์ ตรงกับ actions ที่กำหนดไว้หรือไม่
+ผลลัพธ์ของ function นี้เป็น boolean
+true คือ สิทธิ์ของ user ถูกต้อง
+false คือ สิทธิ์ไม่ถูกต้อง
+
+argumet ที่ส่งให้ function คือ
+actions คือ array ของ string ที่กำหนดชื่อสิทธิ์ที่จะสามารถใช้ได้
+userActions คือ array ของ string ที่กำหนดชื่อสิทธิ์ที่ user มีเพื่อตรวจสอบว่า มีอยู่ใน actions หรือไม่
+ในกรณีที่ userActions มี ACTION_ALL แปลว่า user นั้นมีสิทธิ์ทันที
+
+
+export const ACTION_ALL = {
+  id: "0",
+  name: "All",
+  description: "Super Action can invoke any actions",
+};
+
+export const matchRoles = (actions, userActions) => {
+  if (userActions.includes(ACTION_ALL.name)) return true;
+  return actions.some((action) => userActions.includes(action));
+};
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ เป็น comment ใน test case ไม่ต้องแยกออกมาเป็นหัวข้อ
+และใส่วิธีการรัน ทดสอบ test cases ตาม vitest framework ด้วย
+
+
+
+Response
+
+ต่อไปนี้คือ test case สำหรับฟังก์ชัน matchRoles ที่ใช้ในการตรวจสอบว่าสิทธิ์ของผู้ใช้ตรงกับสิทธิ์ที่กำหนดไว้หรือไม่ และ ขั้นตอนการรัน test case ด้วย vitest framework
+
+import { describe, it, expect } from 'vitest';
+import { ACTION_ALL, matchRoles } from './yourModulePath'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe('matchRoles', () => {
+  // user มีสิทธิ์ ACTION_ALL มีสิทธิ์ทุกรณี
+  it('should return true when user has ACTION_ALL permission', () => {
+    const actions = ['create', 'delete', 'update'];
+    const userActions = [ACTION_ALL.name];
+    expect(matchRoles(actions, userActions)).toBe(true);
+  });
+
+  // user ACTION_ALL และ action อื่นๆ ทำให้มีสิทธิ์ทุกรณี
+  it('should return true regardless of other actions when user has ACTION_ALL', () => {
+    const actions = ['create', 'delete'];
+    const userActions = ['read', 'write', ACTION_ALL.name];
+    expect(matchRoles(actions, userActions)).toBe(true);
+  });
+
+  // user มีสิทธิ์สำหรับ action ที่เจาะจง
+  it('should return true when user has the required action', () => {
+    const actions = ['create', 'delete', 'update'];
+    const userActions = ['delete'];
+    expect(matchRoles(actions, userActions)).toBe(true);
+  });
+
+  // ไม่มีสิทธิ์ในการใช้งาน
+  it('should return false when user does not have any of the required actions', () => {
+    const actions = ['create', 'delete', 'update'];
+    const userActions = ['read'];
+    expect(matchRoles(actions, userActions)).toBe(false);
+  });
+
+  // ไม่มีสิทธิ์ในการใช้งานในกรณีที่ user มีหลาย actions แต่ไม่ตรงกับสิทธิ์เลย
+  it('should return false when user has actions but none match with required actions', () => {
+    const actions = ['create', 'delete'];
+    const userActions = ['read', 'write'];
+    expect(matchRoles(actions, userActions)).toBe(false);
+  });
+
+  // user มีหลาย actions และมีอย่างน้อย 1 สิทธิ์ที่ใช้งานได้
+  it('should return true when user has at least one matching action', () => {
+    const actions = ['create', 'delete'];
+    const userActions = ['delete', 'read'];
+    expect(matchRoles(actions, userActions)).toBe(true);
+  });
+
+  // กรณีที่ไม่มีสิทธิ์ใดๆ ใน actions
+  it('should return false when there are no required actions', () => {
+    const actions = [];
+    const userActions = ['read'];
+    expect(matchRoles(actions, userActions)).toBe(false);
+  });
+
+  // user ไม่มีสิทธิ์อะไรเลย
+  it('should return false when there are no required actions for user', () => {
+    const actions = ['read'];
+    const userActions = [];
+    expect(matchRoles(actions, userActions)).toBe(false);
+  });
+});
+
+วิธีการรัน test cases ด้วย Vitest:
+
+ก่อนอื่นให้แน่ใจว่าคุณได้ติดตั้ง Vitest ในโปรเจคของคุณเรียบร้อยแล้วโดยใช้คำสั่ง:
+npm install vitest --save-dev
+
+เพิ่มสคริปต์ในไฟล์ package.json เพื่อรัน Vitest:
+"scripts": {
+  "test": "vitest"
+}
+
+รันการทดสอบด้วยคำสั่ง:
+npm run test
+ด้วยขั้นตอนนี้, คุณจะสามารถทดสอบความถูกต้องของฟังก์ชัน matchRoles โดยใช้ Vitest framework จากผลลัพธ์ที่ปรากฎบน console
+
+
+
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test schema ที่สร้างจาก zod framework สำหรับ schema ที่มีชื่อว่า PaginationSchema เพื่อใช้รับข้อมูล request แบบมี pagination จาก url
+
+การทดสอบ schema ให้ใช้คำสั่ง schema.parse(value) เพื่อทดสอบ ถ้าค่าที่ใส่ให้ไม่ตรงกับ schema จะมี error เกิดขึ้น สามารถใช้ error ที่เกิดขึ้นทดสอบได้ว่าค่าที่ส่งให้ผิด ถ้าไม่มี error เกิดขึ้นแสดงว่าส่งค่ามาถูกต้อง และต้องได้ object ที่ประกอบด้วย 
+page: number
+limit: number
+
+export const MIN_LIMIT = 1;
+export const MAX_LIMIT = 100;
+export const DEFAULT_LIMIT = 10;
+
+export const PaginationSchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .default("1")
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => val > 0, { message: "Page must be greater than 0" }),
+
+  limit: z
+    .string()
+    .optional()
+    .default(String(DEFAULT_LIMIT))
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => val >= MIN_LIMIT, {
+      message: `Limit must be greater than ${MIN_LIMIT - 1}`,
+    })
+    .refine((val) => val <= MAX_LIMIT, {
+      message: `Limit must be less than or equal to ${MAX_LIMIT}`,
+    }),
+});
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ เป็น comment ใน test case ไม่ต้องแยกออกมาเป็นหัวข้อ
+และใส่วิธีการรัน ทดสอบ test cases ตาม vitest framework ด้วย
+
+Response
+ตัวอย่าง test case สำหรับการทดสอบ schema PaginationSchema ที่สร้างด้วย zod framework ด้วยการใช้ Vitest Framework ในการทดสอบ
+
+import { test } from 'vitest';
+import { ZodError } from 'zod';
+import { PaginationSchema, MIN_LIMIT, MAX_LIMIT } from './your-path-to-schema-file';
+
+// ทดสอบการส่งข้อมูลเปล่าและได้ค่าเริ่มต้น
+test("should use default values if page and limit are not provided", () => {
+  const data = {};
+  const parsedData = PaginationSchema.parse(data);
+
+  expect(parsedData).toEqual({
+    page: 1,
+    limit: DEFAULT_LIMIT,
+  });
+});
+
+// ใส่ข้อมูลที่ถูกต้อง
+test("should parse valid page and limit values", () => {
+  const data = { page: "2", limit: "50" };
+  const parsedData = PaginationSchema.parse(data);
+
+  expect(parsedData).toEqual({
+    page: 2,
+    limit: 50,
+  });
+});
+
+// ทดสอบใส่ข้อมูล page ติดลบ
+test("should throw an error if page is less than 0", () => {
+  const data = { page: '-1' };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    `Page must be greater than 0`
+  );
+});
+
+// ทดสอบด้วยข้อมูล page ที่ไม่ใช่ตัวเลข
+test("should throw an error if page is not a number", () => {
+  const data = { page: "abc" };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    "Page must be greater than 0"
+  );
+});
+
+// ทดสอบใส่ข้อมูล page ที่มีค่าน้อยกว่า MIN_LIMIT
+test("should throw an error if limit is less than MIN_LIMIT", () => {
+  const data = { limit: String(MIN_LIMIT - 1) };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    "Limit must be greater than 0"
+  );
+});
+
+// ทดสอบการใส่ข้อมูล limit ที่มากกว่า MAX_LIMIT
+test("should throw an error if limit is greater than MAX_LIMIT", () => {
+  const data = { limit: String(MAX_LIMIT + 1) };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    "Limit must be less than or equal to 100"
+  );
+});
+
+// ทดสอบการใส่ข้อมูล limit ที่ไม่ใช่ตัวเลข
+test("should throw an error if limit is not a number", () => {
+  const data = { limit: "abc" };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    "Limit must be greater than 0"
+  );
+});
+
+// ทดสอบการใส่ข้อมูล limit ติดลบ
+test("should throw an error if limit is less than 0", () => {
+  const data = { limit: "-1" };
+
+  expect(() => PaginationSchema.parse(data)).toThrow(
+    "Limit must be greater than 0"
+  );
+});
+
+
+
+วิธีการรัน test case ด้วย vitest
+
+Install vitest ลงใน project
+
+npm install -D vitest
+
+
+ในไฟล์ package.json ให้เพิ่ม script สำหรับรัน Vitest:
+
+"scripts": {
+  "test": "vitest"
+}
+
+ทดสอบ test cases ได้ด้วยการใช้คำสั่ง: 
+npm test
+ด้วยขั้นตอนนี้เหล่านี้, จะทำให้สามารถทดสอบความถูกต้องของ PaginationSchema ที่สร้างจาก Zod โดยใช้ Vitest framework จากผลลัพธ์ที่ปรากฎบน console ที่ทดสอบได้
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test function getCurrentDate ด้วย locale and monthFormat
+
+โดยที่ function นี้ทำหน้าที่ในการสร้างข้อความเพื่อแสดงวันที่ปัจจุบันด้วย format และ locale ที่ต่างกันได้ด้วยการใช้ Intl.DateTimeFormat
+ในการ test ให้ใช้เฉพาะ locale ที่เป็น en-GB เท่านั้น ไม่จำเป็นต้องทดสอบ locale อื่น monthFormat สามารถเป็นได้แค่ "2-digit" หรือ "short" เท่านั้น
+
+ตัวอย่างเมื่อ monthFormat เป็น short
+29 Dec 2024
+
+ตัวอย่างเมื่อ monthFormat เป็น 2-digit
+29/12/2024
+
+export function getCurrentDate(locale, monthFormat = "short") {
+  const currentDate = new Date();
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: monthFormat,
+    year: "numeric",
+  }).format(currentDate);
+}
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ เป็น comment ใน test case ไม่ต้องแยกออกมาเป็นหัวข้อ
+ไม่จำเป็นต้องบอกวิธีรันเพื่อทดสอบ เนื่องจากคดหวังว่าคนใช้จะรู้จักการใช้ vitest แล้ว
+
+Response
+
+
+
+
+
+
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test function capitalizeWords สำหรับภาษาอังกฤษ
+input ของ function นี้คือ string
+หน้าที่ของ function คือการรับข้อความเข้ามาแล้ว เปลียนตัวอักษรแรกของแต่ละคำให้เป็นตัวพิมพ์ใหญ่
+ตัวอย่างผลลัพธ์คือ
+
+hello world จะได้ Hello World
+
+export function capitalizeWords(str) {
+  return str
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+ให้อธิบาย test case สั้นๆ เป็น comment ใน test case ไม่ต้องแยกออกมาเป็นหัวข้อ
+ไม่จำเป็นต้องบอกวิธีรันเพื่อทดสอบ เนื่องจากคดหวังว่าคนใช้จะรู้จักการใช้ vitest แล้ว
+ควรมี introduction ก่อนช่วง coding สั้นๆ สรุปสั้นๆ ด้านท้ายด้วย
+
+
+
+Response
+ตัวอย่างกรณีทดสอบสำหรับ function capitalizeWords ซึ่งมีหน้าที่แปลงอักขระตัวแรกของแต่ละคำในข้อความให้เป็นอักษรตัวพิมพ์ใหญ่ 
+
+import { capitalizeWords } from './path/to/your/function'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("Test capitalize string", () => {
+  // แปลงตัวอักษรแรกในทุกคำให้เป็นตัวพิมพ์ใหญ่
+  it("converts every first character of each word into uppercase", () => {
+    const input = "hello world";
+    const expected = "Hello World";
+    const result = capitalizeWords(input);
+    expect(result).toEqual(expected);
+  });
+
+  // แปลงตัวอักษรแรกในทุกคำให้เป็นตัวพิมพ์ใหญ่ กรณีบางคำขึ้นต้นด้วยตัวพิมพ์ใหญ่และพิมพ์เล็กสลับกัน
+  it("Should capitalize with mixed cases", () => {
+    const input = "hello world. This Is a Different sentence.";
+    const expected = "Hello World. This Is A Different Sentence.";
+    const result = capitalizeWords(input);
+    expect(result).toEqual(expected);
+  });
+
+  // แปลงตัวอักษรแรกในทุกคำให้เป็นตัวพิมพ์ใหญ่กรณีที่มีคำเดียว
+  it("Should capitalize with one word", () => {
+    const input = "hello";
+    const expected = "Hello";
+    const result = capitalizeWords(input);
+    expect(result).toEqual(expected);
+  });
+
+  // มีตัวเลขเป็นคำในประโยค
+  it("Should handle number in the sentence", () => {
+    const input = "hello world 123";
+    const expected = "Hello World 123";
+    const result = capitalizeWords(input);
+    expect(result).toEqual(expected);
+  });
+
+   // ทุกๆตัวแรกในแต่ละคำเป็นพิมพ์ใหญ่อยู่แล้ว
+   it("Should handle strings that already capitalized", () => {
+    const input = "Hello World. This Is Already Capitalized.";
+    const expected = "Hello World. This Is Already Capitalized.";
+    const result = capitalizeWords(input);
+    expect(result).toEqual(expected);
+  });
+
+  // ส่งตัวเลขเป็น input แทนที่จะส่งเป็น string ควรได้ error เพราะ function รับเฉพาะ string
+  it("Should handle number input, expects an error due to non-string input", () => {
+    const input = 123;
+    expect(() => capitalizeWords(input)).toThrow("split is not a function");
+  });
+
+  // ส่ง null เป็น input
+  it("Should handle null case", () => {
+    const input = null;
+    expect(() => capitalizeWords(input)).toThrow(
+      "Cannot read properties of null"
+    );
+  });
+
+  // ส่ง undefined เป็น input
+  it("Should handle undefined case", () => {
+    const input = undefined;
+    expect(() => capitalizeWords(input)).toThrow(
+      "Cannot read properties of undefined"
+    );
+  });
+});
+
+
+สรุป: สามารถใช้ Test case เหล่านี้เพื่อทดสอบการทำงานของ function capitalizeWords ที่แปลงตัวอักษรตัวแรกในภาษาอังกฤษในแต่ละคำในข้อความให้เป็นตัวพิมพ์ใหญ่ ซึ่งมีการทดสอบหลากหลายกรณีเพื่อทำให้มั่นใจว่า function capitalizeWords ทำงานได้ถูกต้อง

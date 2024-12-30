@@ -1,0 +1,494 @@
+Request
+จงสร้าง test cases เพื่อทดสอบ function ที่รับค่าเป็นจำนวนเต็ม 2 ตัว คือ left กับ right ที่มีชื่อว่า range
+ผลลัพธ์ที่ได้จาก function นี้คือ array ที่มีสมาชิกตั้งแต่ค่าน้อยสุด ถึงค่าสูงสุด ตัวอย่างเช่น
+left = 1, right = 5 ผลลัพธ์จะเป็น [1, 2, 3, 4, 5]
+left = 3, right = 6 ผลลัพธ์จะเป็น [3, 4, 5, 6]
+left = -3, right = 0 ผลลัพธ์จะเป็น [-3, -2, -1, 0]
+left = 5, right = 2 ผลลัพธ์จะเป็น [2, 3, 4, 5]
+left = 1, right = 1 ผลลัพธ์จะเป็น [1]
+
+test cases ควรมีการทดสอบข้อผิดพลาดด้วย
+กรณีส่งค่าอื่นที่ไม่ใช่ตัวเลข
+ค่าที่ส่งเข้ามาสามารถเป็นค่าติดลบได้
+
+export const range = (left: number, right: number) => {
+  if (!Number.isInteger(left) || !Number.isInteger(right)) {
+    throw new Error("All the argument must be integers")
+  }
+  const min = Math.min(left, right);
+  const max = Math.max(left, right);
+  const data = [];
+  for (let i = min; i <= max; i++) {
+    data.push(i);
+  }
+  return data;
+};
+
+Response
+test cases ที่สร้างด้วย vitest เพื่อทดสอบฟังก์ชัน range ด้วยการรับค่าจำนวนเต็ม 2 ค่าและสร้าง array ของค่าระหว่างค่าทั้งสองมีดังนี้ 
+
+import { range } from './yourModuleName'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe('range function', () => {
+  it('should return an array from left to right', () => {
+    expect(range(1, 5)).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it('should return an array from right to left when right is less than left', () => {
+    expect(range(5, 2)).toEqual([2, 3, 4, 5]);
+  });
+
+  it('should return an array with a single element when left is equal to right', () => {
+    expect(range(1, 1)).toEqual([1]);
+  });
+
+  it('should handle negative numbers', () => {
+    expect(range(-3, 0)).toEqual([-3, -2, -1, 0]);
+    expect(range(0, -3)).toEqual([-3, -2, -1, 0]);
+  });
+
+  it('should throw an error if left is not an integer', () => {
+    expect(() => range('1', 5)).toThrowError('All the argument must be integers');
+  });
+
+  it('should throw an error if right is not an integer', () => {
+    expect(() => range(1, '5')).toThrowError('All the argument must be integers');
+  });
+
+  it('should throw an error if both left and right are not integers', () => {
+    expect(() => range('1', '5')).toThrowError('All the argument must be integers');
+  });
+});
+
+การอธิบาย Test Cases:
+
+การทดสอบเมื่อใส่ค่าข้อมูลถูกต้อง:
+
+range(1, 5): ทดสอบกับค่าที่ปกติที่จะสามารถรับได้
+
+range(5, 2): ทดสอบกับค่าที่ right น้อยกว่า left
+
+range(1, 1): ทดสอบกับค่าที่ left ตรงกับ right ดังนั้นควรได้ค่าเดียวเท่านั้น
+
+range(-3, 0) และ range(0, -3): ทดสอบกับตัวเลขติดลบ
+
+
+การทดสอบเมื่อใส่ข้อมูลที่ไม่ถูกต้อง:
+
+range('1', 5): ทดสอบกับ left ที่ไม่ใช่ตัวเลข
+
+range(1, '5'): ทดสอบกับ right ที่ไม่ใช่ตัวเลข
+
+range('1', '5'): ทดสอบกับค่าที่สองตัวทั้งหมดไม่ใช่ตัวเลข
+
+ทดสอบ test case
+
+รันคำสั่งติดตั้ง test framework ลงใน project
+
+npm install vitest -d
+
+
+ตรวจสอบ package.json ว่ามี script สำหรับการ test แล้ว
+ตัวอย่างของ script สำหรับ test
+
+"test": "vitest run"
+
+
+
+
+พิมพ์คำสั่ง npm run vitest เพื่อทดสอบ
+
+npm run test
+
+
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test function uniqueObject
+function uniqueObject รับ array อาจเป็น object ที่ซ้ำกัน โดยที่ function นี้จะลบ object ที่ซ้ำกันออก ผลลัพธ์ของ function คือ array ที่มีสมาชิกที่ไม่ซ้ำกัน
+
+
+วิธีดูว่า object ตัวไหนเหมือนกันใช้วิธี JSON.stringify(obj) และ ลำดับของ key, value มีผลในการใช้ uniqueObject
+ในกรณีที่ array มีค่าที่ไม่ใช่ object, ให้ใช้ผลลัพธ์ JSON.stringify()
+
+ตัวอย่าง test case ที่ ถ้ายังไม่ครอบคลุมให้สร้างเพิ่ม
+กรณีค่าที่ใส่มาเป็น null, undefined หรือ เป็น array ที่ไม่มีสมาชิกใดๆ ในกรณีนี้ผลลัพธ์คือ input ที่ใส่เข้าไป
+กรณีใส่ค่าแบบไม่ซ้ำเข้าไปเลย ผลลัพธ์ควรเหมือนกับ input
+กรณีมีสมาชิกที่ซ้ำกันใน array ผลลัพธ์คือarray ที่มีสมาชิกที่ไม่ซ้ำกัน
+
+export const uniqueObject = (arr) => {
+  if (!arr || arr.length === 0) {
+    return arr;
+  }
+  return [...new Map(arr.map((obj) => [JSON.stringify(obj), obj])).values()];
+};
+
+
+อธิบาย test cases พอสังเขปและบอกวิธีรัน test cases ด้วย
+
+Response
+ในการสร้าง test cases สำหรับฟังก์ชัน uniqueObject โดยใช้ Vitest Framework นั้น จะต้องคำนึงถึงกรณีการรับ input หลายๆ แบบ เพื่อให้มั่นใจว่าฟังก์ชันทำงานได้ตามที่คาดหวังในทุกๆ สถานการณ์ที่อาจเกิดขึ้นได้ นี่คือตัวอย่าง test cases พร้อมคำอธิบาย:
+
+import { describe, it, expect } from 'vitest';
+import { uniqueObject } from './path-to-your-function-file'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+// Test case 1: input เป็น null
+describe('uniqueObject', () => {
+  it('should return null if input is null', () => {
+    const input = null;
+    const result = uniqueObject(input);
+    expect(result).toBe(null);
+  });
+
+  // Test case 2: input เป็น undefined
+  it('should return undefined if input is undefined', () => {
+    const input = undefined;
+    const result = uniqueObject(input);
+    expect(result).toBe(undefined);
+  });
+
+  // Test case 3: input เป็น array ว่าง
+  it('should return an empty array if input is an empty array', () => {
+    const input = [];
+    const result = uniqueObject(input);
+    expect(result).toEqual([]);
+  });
+
+  // Test case 4: input เป็น array ของ objects ที่ไม่ซ้ำกัน
+  it('should return the same array if all objects are unique', () => {
+    const input = [{ a: 1 }, { b: 2 }, { c: 3 }];
+    const result = uniqueObject(input);
+    expect(result).toEqual(input);
+  });
+
+  // Test case 5: กรณีที่มี objects ที่ซ้ำกันใน array
+  it('should return an array with unique objects', () => {
+    const input = [{ a: 1 }, { b: 2 }, { a: 1 }];
+    const expected = [{ a: 1 }, { b: 2 }];
+    const result = uniqueObject(input);
+    expect(result).toEqual(expected);
+  });
+
+  // Test case 6: values ที่ไม่ใช่ object
+  it('should correctly handle non-object values', () => {
+    const input = [{ a: 1 }, "string", { a: 1 }, 42, 42, null, null];
+    const expected = [{ a: 1 }, "string", 42, null];
+    const result = uniqueObject(input);
+    expect(result).toEqual(expected);
+  });
+
+  // Test case 7: objects มี key-value ที่เหมือนกันแต่ลำดับต่างกัน
+  it('should consider objects with same keys but different order as unique', () => {
+    const input = [{ a: 1, b: 2 }, { b: 2, a: 1 }];
+    const expected = [{ a: 1, b: 2 }, { b: 2, a: 1 }];
+    const result = uniqueObject(input);
+    expect(result).toEqual(expected);
+  });
+});
+
+อธิบาย test cases:
+
+Test case 1 และ 2: ตรวจสอบว่าฟังก์ชันจะคืนค่าเดิมเมื่อ input เป็น null หรือ undefined โดยไม่เกิด error
+
+Test case 3: ตรวจสอบว่าฟังก์ชันจะคืนค่า array ว่างเมื่อ input เป็น array ว่าง
+
+Test case 4: ตรวจสอบว่าถ้าข้อมูลทั้งหมดใน array ไม่ซ้ำกัน ฟังก์ชันจะคืนค่า array เดิม
+
+Test case 5: ตรวจสอบการลบ object ที่ซ้ำกัน
+
+Test case 6: ตรวจสอบการจัดการค่าที่ไม่ใช่ object และลบค่าที่ซ้ำกัน
+
+Test case 7: ตรวจสอบการพิจารณา objects ที่มี key-value เหมือนกันแต่ลำดับไม่เหมือนกันให้เป็นเอกลักษณ์
+
+วิธีรัน test cases:
+
+ติดตั้ง Vitest โดยการรันคำสั่ง npm install vitest --save-dev
+
+
+
+เพิ่ม script ใน package.json:
+
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+
+
+รันคำสั่ง npm run test ใน terminal เพื่อรัน test cases ทั้งหมด
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test function sort
+function sort รับ array ที่เป็น object เท่านั้นและมีสมมติฐานว่า input ที่จะใส่มาเป็น object และ attribute ที่จะใช้สำหรับ sort โดยที function นี้จะ sort object ตาม attribute ที่กำหนดแบบ string
+
+ในกรณีที่ใส่ชือ attribute ที่ไม่มีเข้ามา function จะใช้ค่า default เป็น ค่าว่าง ''
+
+function สำหรับการ sort object
+export const sort = (arr, attr) => (
+  arr.sort((a, b) => (a[attr] || '').toString().localeCompare((b[attr] || ''), undefined, { numeric: true, sensitivity: 'base' }))
+);
+
+ผลลัพธ์ที่ได้คือ array ของ object ที่เรียงจากน้อยไปมากตาม attribute ที่กำหนด
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ ว่าทดสอบอะไรบ้าง
+และใส่วิธีการรัน ทดสอบ test cases ตาม vitest framework ด้วย
+
+
+Response
+ทดสอบฟังค์ชั่น sort ด้วย vitest สามารถทำได้โดยสร้าง test case ในไฟล์ sort.test.js หรือเปลี่ยนเป็นชื่อต้องการ ในตัวอย่างนี้:
+
+// sort.test.js
+import { sort } from './path-to-the-file'; // import จาก path ที่ถูกต้อง
+
+// Test Case 1: ทดสอบการเรียง object ของ array ของ object โดยใช้ attribute price
+describe('sort function', () => {
+  it('should sort an array of objects by the specified attribute', () => {
+    const data = [
+      { name: 'banana', price: 2.5 },
+      { name: 'apple', price: 1.8 },
+      { name: 'cherry', price: 3.2 },
+    ];
+    const sortedData = sort(data, 'price');
+    expect(sortedData).toEqual([
+      { name: 'apple', price: 1.8 },
+      { name: 'banana', price: 2.5 },
+      { name: 'cherry', price: 3.2 },
+    ]);
+  });
+
+  // Test Case 2: ทดสอบโดยใช้ attribute ที่ไม่มีใน object
+  it('should keep the order when sorting by an attribute that does not exist', () => {
+    const data = [
+      { name: 'banana', price: 2.5 },
+      { name: 'apple', price: 1.8 },
+      { name: 'cherry', price: 3.2 },
+    ];
+    const sortedData = sort(data, 'nonExistentAttribute');
+    expect(sortedData).toEqual(data);
+  });
+
+  // Test Case 3: ทดสอบโดยเรียง object ที่มี attribute เป็น string
+  it('should sort objects with string attributes', () => {
+    const data = [
+      { name: 'cherry' },
+      { name: 'banana' },
+      { name: 'apple' },
+    ];
+    const sortedData = sort(data, 'name');
+    expect(sortedData).toEqual([
+      { name: 'apple' },
+      { name: 'banana' },
+      { name: 'cherry' },
+    ]);
+  });
+
+  // Test Case 4: ทดสอบโดยใช้ attribute ที่เป็นค่า undefined
+  it('should sort objects with undefined attributes by an empty string', () => {
+    const data = [
+      { name: 'banana', price: 2.5 },
+      { name: 'apple', price: undefined },
+      { name: 'cherry', price: 3.2 },
+    ];
+    const sortedData = sort(data, 'price');
+    expect(sortedData).toEqual([
+      { name: 'apple', price: undefined },
+      { name: 'banana', price: 2.5 },
+      { name: 'cherry', price: 3.2 },
+    ]);
+  });
+
+  // Test Case 5: Sort โดยใช้ attribute ชื่อว่าง ('')
+  it('should sort objects with an empty attribute name', () => {
+    const data = [
+      { name: 'banana', price: 2.5 },
+      { name: 'apple', price: 1.8 },
+      { name: 'cherry', price: 3.2 },
+    ];
+    const sortedData = sort(data, '');
+    expect(sortedData).toEqual(data);
+  });
+});
+
+อธิบายตัวอย่าง test case:
+
+
+
+
+
+Test Case 1: ทดสอบการ sort ของ array ของ object โดยใช้ attribute price
+
+
+
+Test Case 2: ใช้ attribute ที่ไม่มีใน object จะทำให้ array ไม่เปลี่ยนตำแหน่ง
+
+
+
+Test Case 3: ทดสอบโดยเรียง object ที่มี attribute เป็น string
+
+
+
+Test Case 4: ใช้ attribute ที่เป็น undefined และจะถูก ในกรณีนี้ค่าว่าง ('') จะถูกนำมาใช้ในการเรียง
+
+
+
+Test Case 5: โดยใช้ attribute ชื่อว่าง ('') จะทำให้ array ไม่เปลี่ยนตำแหน่ง
+
+วิธีการรัน test case ด้วย vitest:
+
+
+
+
+
+ติดตั้ง vitest โดยใช้คำสั่ง:
+
+npm install -D vitest
+
+
+
+
+
+เพิ่ม configuration ให้ package.json:
+
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+
+
+
+รัน test case โดยใช้คำสั่ง:
+
+npm test
+
+
+
+สามารถตรวจสอบการทำงานของฟังก์ชัน sort ตาม test cases ที่กำหนดไว้ จากผลลัพธ์ที่ปรากฎบน console ที่รันคำสั่ง
+
+
+
+
+
+
+
+
+
+
+
+Request
+จงสร้าง test case ใน javascript ด้วย vitest framework สำหรับ test schema ที่สร้างจาก zod framework สำหรับ schema ที่มีชื่อว่า userSignupSchema
+userSignupSchema ประกอบด้วย
+email ในกรณีนี้ไม่จำเป็นต้องทดสอบ format ของ email เนื่องจาก zod framework สามารถจัดการได้ถูกต้อง ไม่จำเป็นต้องเขียน test เอง
+password ต้องมีอย่างน้อย 6 ตัว
+firstName และ lastName เป็น string และ สามารถไม่ใส่มาได้
+
+การทดสอบ schema ให้ใช้คำสั่ง schema.parse(value) เพื่อทดสอบ ถ้าค่าที่ใส่ให้ไม่ตรงกับ schema จะมี error เกิดขึ้น สามารถใช้ error ที่เกิดขึ้นทดสอบได้ว่าค่าที่ส่งให้ผิด
+
+Zod schema
+export const userSignupSchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(6),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+  })
+  .strict();
+
+นอกจากนี้ให้อธิบาย test case สั้นๆ ว่าทดสอบอะไรบ้าง
+และใส่วิธีการรัน ทดสอบ test cases ตาม vitest framework ด้วย
+
+
+Response
+คุณสามารถสร้าง test cases เพื่อทดสอบ userSignupSchema ที่สร้างจาก Zod โดยใช้ Vitest ได้ดังนี้
+
+import { test, expect } from "vitest";
+import { userSignupSchema } from "../../src/schema/user-signup-schema"; // Update the path to your schema file
+
+test("should allow valid user sign up data", async () => {
+  const validData = {
+    email: "test@example.com",
+    password: "securepassword",
+    firstName: "John",
+    lastName: "Doe",
+  };
+  const parsedData = userSignupSchema.parse(validData);
+  expect(parsedData).toMatchObject(validData); // Verify that the parsed data matches the input
+});
+
+test("should require email", async () => {
+  const dataWithoutEmail = {
+    password: "securepassword",
+    firstName: "John",
+    lastName: "Doe",
+  };
+  expect(() => userSignupSchema.parse(dataWithoutEmail)).toThrow("Required");
+});
+
+test("should require password", async () => {
+  const dataWithoutPassword = {
+    email: "test@example.com",
+    firstName: "John",
+    lastName: "Doe",
+  };
+  expect(() => userSignupSchema.parse(dataWithoutPassword)).toThrow("Required");
+});
+
+test("should require password to be at least 6 characters long", async () => {
+  const shortPassword = {
+    email: "test@example.com",
+    password: "123",
+    firstName: "John",
+    lastName: "Doe",
+  };
+  expect(() => userSignupSchema.parse(shortPassword)).toThrow("min");
+});
+
+test("should allow firstName and lastName to be optional", async () => {
+  const dataWithoutNames = {
+    email: "test@example.com",
+    password: "securepassword",
+  };
+  const parsedData = userSignupSchema.parse(dataWithoutNames);
+  expect(parsedData).toEqual({
+    email: "test@example.com",
+    password: "securepassword",
+  });
+});
+
+
+การอธิบาย Test Case
+
+should allow valid user sign up data - ทดสอบการใส่ข้อมูลที่ถูกต้องและไม่เกิด error
+should require email - ทดสอบข้อมูลที่ไม่มี email จะรับ error "Required"
+should require password - ทดสอบข้อมูลที่ไม่มี password จะรับ error "Required"
+should require password to be at least 6 characters long - ทดสอบข้อมูลที่ password ต่ำกว่า 6 ตัวจะรับ error "min"
+should allow firstName and lastName to be optional - ทดสอบเวลาไม่ใส่ firstName และ lastName จะไม่มี error เพราะ firstName และ lastName ไม่เป็นค่าที่จำเป็นต้องมี
+
+วิธีการรัน Test Case
+
+ติดตั้ง Vitest:
+
+
+ในกรณีที่ยังไม่ได้ติดตั้ง Vitest ให้ทำโดยใช้คำสั่ง
+
+npm install -D vitest
+
+
+กำหนดส่วนใหญ่ของโปรเจคให้สามารถทำงานได้กับ Vitest:
+
+
+สร้างไฟล์ package.json เพิ่มคำสั่งทำงานได้โดยใช้
+
+"scripts": {
+  "test": "vitest"
+}
+
+รัน Test Case:
+
+ทดสอบ test cases ด้วยการ terminal ที่โปรเจคของและใช้คำสั่ง
+npm test
+สามารถตรวจสอบผลลัพธ์ของ test cases ได้ที่ console ที่รัน

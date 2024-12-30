@@ -1,0 +1,52 @@
+
+1. มี function ที่เขียนด้วย javascript ชื่อ getTimeOfDay function นี้จะให้ผลลัพธ์เป็นเวลาขณะที่เรียกในภาษาพูด เช่น เช้า บ่าย เย็น ค่ำ และ ดึก
+function นี้มี input เป็น Date object เวลามีการเรียก function argument date ที่รับเข้ามาจะถูกใช้สำหรับการคำนวณเวลาออกมาเป็นภาษาพูด
+
+export function getTimeOfDay(date = new Date()) {
+  const hours = date.getHours();
+
+  if (hours < 6) {
+    return 'เช้ามืด'
+  }
+  else if (hours < 12) {
+    return 'เช้า';
+  } else if (hours < 15) {
+    return 'บ่าย';
+  } else if (hours < 18) {
+    return 'เย็น';
+  } else if (hours < 21) {
+    return 'ค่ำ';
+  } else if (hours < 24) {
+    return 'ดึก';
+  }
+}
+
+จงสร้าง test cases เพื่อ ตรวจสอบว่าเมื่อมีการให้ค่าเวลาที่ต่างกันแล้วได้ผลลัพธ์ที่ถูกต้อง
+6.00 - 11.00 - เช้า
+12.00 - 14.00 - บ่าย
+15.00 - 17.00 - เย็น
+18.00 - 20.00 - ค่ำ
+21.00 - 23.00 - ดึก
+00.00 - 5.00 - เช้ามืด
+
+
+
+
+
+
+
+
+
+
+function สำหรับการ เรียง element ใหม่ใน list แบบสุ่ม
+จงเขียน test case บน vitest ด้วย javascript เพื่อ test ว่า เมื่อ function shuffle รับ array ของ number หรือ string หรือ boolean หรือ object
+กรณีเป็น object สามารถใช้ === ได้เลย เพื่อเทียบ ไม่จำเป็นต้อง check ทุก property
+
+เนื่องจากการสุ่มอาจได้ผลลัพธ์เหมือนเดิมการทำ expect ทำเฉพาะ size ของผลลัพธ์ ยังเหมือนเดิมและมี element ครบเหมือน input ก็เพียงพอแล้ว
+กรณี input เป็น [] หรือ array ที่มีสมาชิกเดียว ผลลัพธ์ที่ได้จะเหมือนกับ input
+
+export const shuffle = (unshuffled) => unshuffled
+    .map((a) => ({ sort: Math.random(), value: a }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((a) => a.value);;
+

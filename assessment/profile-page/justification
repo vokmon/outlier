@@ -1,0 +1,26 @@
+app.py
+
+if data is not None:
+v
+if data is None:
+
+
+===
+
+EditProfileForm
+
+remove the added `, userId` as it didn't help
+
+===
+
+ProfilePage
+
+change the initial userId state from 1 to 0
+
+when calling PUT, pass userId instead of displayId
+
+
+First, the only edit the model made (the addition of `userId` in `EditProfileForm`) should be reverted, as it didn't help solve the user's problem. The user IDs start from 0, so the initial value of the `userId` state should also be 0 instead of 1. Additionally, when calling the update endpoint (PUT method), `userId` should be passed instead of `displayId`. In the back-end part, the data validation logic is wrong. The `not` keyword has to be removed.
+
+To resolve all the issues I mentioned earlier, I first reverted the change in `EditProfileForm`. Then, in `ProfilePage`, I changed the initial `userId` state from 1 to 0 and switched from passing `displayId` to `userId` when updating. Lastly, in the back-end part, I removed `not` from the `if` condition within the `api_update_user` method.
+

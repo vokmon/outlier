@@ -1,0 +1,211 @@
+Request:
+จงสร้าง test case เพื่อทดสอบการทำงานของ function formatNumber.
+การทำงานของ function นี้คือการรับค่าตัวเลขแล้ว ให้ผลลัพธ์เป็น string ที่เป็น format ##,###.##.
+มีทศนิยม  2 ตัว ถ้าใส่มาเกินให้ปัดเศษ
+ใช้ , ในการคั่น และใช้ . สำหรับทศนิยม
+
+เขียนคำย่อๆ ว่า test case ต้องการทดสอบอะไรลงไปใน code เป็น comment ได้เลย ไม่ต้องแยกออกมาเป็นอีก section
+มี section ที่เป็นคำเกริ่นนำเล็กน้อยเกี่ยวกับการทดสอบนี้
+มี section สำหรับ สรุป test case ตอนท้ายด้วย
+
+export function formatNumber(number) {
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number); //##,###.## (round)
+}
+
+Response
+การทดสอบนี้มีจุดประสงค์เพื่อยืนยันความถูกต้องของฟังก์ชัน formatNumber ที่ทำหน้าที่ในการแปลงตัวเลขเป็นสตริงในรูปแบบที่กำหนด (##,###.##) โดยใช้เครื่องมือ Intl.NumberFormat ของ JavaScript 
+
+ฟังก์ชันนี้สามารถจัดการกับตัวเลขที่มีทศนิยมและแสดงผลในรูปแบบที่ถูกต้องตามรูปแบบที่กำหนด หรือส่งคืนค่า 'NaN' ในกรณีที่ไม่สามารถจัดการได้
+
+ด้านล่างนี้คือ code สำหรับ unit test โดยใช้ Jest ซึ่งเป็น JavaScript testing framework ที่เป็นที่นิยม
+
+import { formatNumber } from './yourModule'; // แทนที่ './yourModule' ด้วยตำแหน่งไฟล์ที่แท้จริงของคุณ
+
+describe('formatNumber', () => {
+
+  // ทดสอบการจัดรูปแบบตัวเลขปกติ
+  it('formats a regular number correctly', () => {
+    expect(formatNumber(1234.567)).toBe('1,234.57');
+  });
+
+  // ทดสอบการจัดรูปแบบของ zero
+  it('formats zero correctly', () => {
+    expect(formatNumber(0)).toBe('0.00');
+  });
+
+  // ทดสอบการจัดรูปแบบของตัวเลขที่ไม่มีทศนิยม
+  it('formats an integer correctly', () => {
+    expect(formatNumber(9876)).toBe('9,876.00');
+  });
+
+  // ทดสอบการจัดรูปแบบตัวเลขที่มีทศนิยมไม่ถึงสองตำแหน่ง
+  it('formats a number with less than two decimal places', () => {
+    expect(formatNumber(1234.5)).toBe('1,234.50');
+  });
+
+  // ทดสอบการจัดรูปแบบตัวเลขที่มีทศนิยมมากกว่าสองตำแหน่ง
+  it('formats a number with more than two decimal places', () => {
+    expect(formatNumber(1234.5678)).toBe('1,234.57');
+  });
+
+  // ทดสอบการจัดรูปแบบตัวเลขที่ให้มีค่าเป็นลบ
+  it('formats a negative number correctly', () => {
+    expect(formatNumber(-1234.567)).toBe('-1,234.57');
+  });
+
+  // ทดสอบการจัดรูปแบบค่า null
+  it('formats null as 0.00', () => {
+    expect(formatNumber(null)).toBe('0.00');
+  });
+
+  // ทดสอบการจัดรูปแบบค่า undefined
+  it('formats undefined as NaN', () => {
+    expect(formatNumber(undefined)).toBe('NaN');
+  });
+
+  // ทดสอบการจัดรูปแบบค่าที่เป็น string
+  it('formats a string as NaN', () => {
+    expect(formatNumber("hello")).toBe('NaN');
+  });
+
+  // ทดสอบการจัดรูปแบบค่าที่เป็น boolean ที่เป็น true
+  it('formats a boolean as 1.00', () => {
+    expect(formatNumber(true)).toBe('1.00');
+  });
+
+  // ทดสอบการจัดรูปแบบค่าที่เป็น boolean ที่เป็น false
+  it('formats a boolean as 0.00', () => {
+    expect(formatNumber(false)).toBe('0.00');
+  });
+  
+  // ทดสอบการจัดรูปแบบค่าตัวเลขที่มีค่ามาก
+  it('formats a large number', () => {
+    expect(formatNumber(1234567890.12)).toBe('1,234,567,890.12');
+  });
+
+  // ทดสอบการจัดรูปแบบค่าตัวเลขที่เป็น string
+  it('formats a string of number', () => {
+    expect(formatNumber('567890.12')).toBe('567,890.12');
+  });
+
+  // ทดสอบการจัดรูปแบบค่าตัวเลขที่เป็น string ที่ format แล้ว
+  it('formats a string of formatted number', () => {
+    expect(formatNumber('567,890.12')).toBe('NaN');
+  });
+});
+
+สรุปการทดสอบ
+
+ฟังก์ชัน formatNumber สามารถจัดรูปแบบตัวเลขได้อย่างถูกต้องตามที่กำหนด โดยที่ฟังก์ชันนี้จะรับตัวเลข ที่อาจเป็นจำนวนเต็มหรือมีทศยมได้
+สามารถจัดการกับเลขที่มีทศนิยมมากเกินกว่า 2 ตำแหน่ง โดยการปัดเศษให้ถูกต้อง
+สามารถแสดงผล 'NaN' เมื่อไม่สามารถแปลงเป็นรูปแบบตัวเลขที่กำหนดได้ เช่น ค่า null, undefined, ค่าที่ไม่ใช่ตัวเลข เป็นต้น
+
+
+
+
+
+
+Request
+จงสร้าง unit test ด้วย javascript โดยใช้ test framework vitest เพื่อทดสอบการทำงานของ function toTitleCase
+function ทำหน้าที่แปลงข้อความให้เป็น title case คือตัวอักษรแรกในแต่ละเป็นตัวพิมพ์ใหญ่และที่เหลือในคำคือตัวพิมพ์เล็ก
+ข้อมูลที่จะใช้ทดสอบใช้ภาษาอังกฤษเท่านั้น
+ให้ใช้การเขียนแบบ given, when, then ตัวอย่างคือ
+given - บอกว่า input ที่จะแปลงคืออะไร
+when - เมื่อเรียก function
+then - คือการตรวจสอบผลลัพธ์
+
+เขียน comment ใน test case เลย ไม่ต้องแยกเป็นอีก section สำหรับการอธิบาย test case ต้องการให้ source code นั้นเป็น self-documented.
+มี summary แยกออกมาจาก source code โดยทำเป็นหัวข้อให้อ่านง่ายๆ
+
+export function toTitleCase(str) {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+
+Response
+การทดสอบนี้มีจุดประสงค์เพื่อยืนยันความถูกต้องของฟังก์ชัน toTitleCase ที่ทำหน้าที่ในการแปลงข้อความภาษาอังกฤษให้กลายเป็น title case
+
+function นี้สามารถรับข้อความที่มีอักขระพิเศษและตัวเลขได้
+
+import { toTitleCase } from "path-to-your-file"; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("toTitleCase", () => {
+
+  // ทดสอบข้อความที่มีคำเดียวที่เป็นพิมพ์เล็กทั้งหมด
+  it("single word in lowercase should return the word with the first letter capitalized", () => {
+    // given คำที่ตัวอักษรแรกไม่ใช่ตัวใหญ่
+    const input = "hello";
+
+    // when แปลงข้อความ
+    const result = toTitleCase(input);
+
+    // then ตัวอักษรแรกถูกแปลงเป็นตัวใหญ่
+    expect(result).toBe("Hello");
+  });
+
+  // ทดสอบข้อความที่มีคำเดียวที่เป็นพิมพ์ใหญ่ทั้งหมด
+  it("given a single word in uppercase, should return the word with the first letter capitalized", () => {
+    // given คำที่ตัวอักษรทุกตัวเป็นตัวใหญ่
+    const input = "WORLD";
+    // when แปลงข้อความเป็น title case
+    const result = toTitleCase(input);
+    // then ตัวอักษรแรกเป็นตัวใหญ่
+    expect(result).toBe("World");
+  });
+
+  // ประโยคยาวที่มีหลายคำและเป็นตัวพิมพ์เล็กทั้งหมด
+  it("should return each word with the first letter capitalized when a phrase with multiple words in lowercase is given", () => {
+    // given ข้อความที่เป็นพิมพ์เล็กทั้งหมดทุกคำ
+    const input = "hello world from javascript.";
+
+    // when เรียกใช้ function
+    const result = toTitleCase(input);
+
+    // then ตัวอักษรแรกในทุกคำจะถูกแปลงเป็นพิมพ์ใหญ่
+    expect(result).toBe("Hello World From Javascript.");
+  });
+
+  // ประโยคยาวที่มีหลายคำที่เป็น title case แล้ว
+  it("should return each word with the first letter capitalized when a phrase with title case is given", () => {
+    // given ข้อความที่เป็น title case แล้ว
+    const input = "Hello World From Javascript.";
+
+    // when ต้องการแปลงข้อความ
+    const result = toTitleCase(input);
+
+    // then ตัวอักษรแรกในทุกคำจะถูกแปลงเป็นพิมพ์ใหญ่
+    expect(result).toBe("Hello World From Javascript.");
+  });
+
+  // ประโยคยาวที่มีอักขระพิเศษ
+  it("should return each word with the first letter capitalized when a phrase with special characters and number is given", () => {
+    // given ข้อความที่มีอักขระพิเศษและตัวเลข
+    const input = "hello@# $%^&*() 123 world.";
+
+    // when เรียก toTitleCase ด้วยข้อความที่มีอักขระพิเศษ
+    const result = toTitleCase(input);
+
+    // then ตัวอักษรแรกในทุกคำจะถูกแปลงเป็นพิมพ์ใหญ่ โดยที่อักขระพิเศษไม่เปลี่ยนแปลง
+    expect(result).toBe("Hello@# $%^&*() 123 World.");
+  });
+});
+
+สรุปการทดสอบ
+
+ฟังก์ชัน toTitleCase เป็น ฟังก์ชันที่ใช้ในการแปลงตัวอักษรแรกของแต่ละคำในข้อความ คุณสามารถใช้ test cases เหล่านี้เพื่อตรวจสอบความถูกต้องของ function ได้ ข้อระมัดระวังในการใช้งานคือ ค่าที่ส่งมาไม่ควรเป็น null หรือ undefined
+
+
+
+
+
+
+
+Request
+

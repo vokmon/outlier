@@ -1,0 +1,16 @@
+Test cases
+neena and the password password321
+Neena and password123
+neena and password123
+helios and password321
+helios and mysecurepassword.
+
+Requirement
+- There should be console messages for each function.
+
+
+Justification
+
+Instead of tracking `failed_attempts_left`, the DataFrame should track `failed_attempts` to ensure consistency with the User class. The comment "Add new user to DataFrame" should be removed, as the user explicitly requested not to add any comments. The `login` method is currently performing a case-insensitive check on the `username`. The password check is incorrectly comparing the password string input with itself rather than the saved user's password. The `increment_failed_attempts` method should be called when the password doesn't match rather than the other way around, and `reset_failed_attempts` should only be called when the input password is correct. Although the prompt contained some conflicting information about how many test logins to perform, it stated clearly the username and password pairs to use for testing. However, these pairs weren't all used correctly in the response code.
+
+To address all the issues mentioned earlier, I first replaced all occurrences of `failed_attempts_left` with `failed_attempts` and also changed the initial value from 3 to 0. Next, I removed the unnecessary comment. For the `login` method, I changed the username comparison logic to be case-sensitive and fixed the password comparison bug. I moved the `increment_failed_attempts` call to the appropriate block and removed the `reset_failed_attempts` call where it didn't belong. Finally, I fixed the test logins code.

@@ -1,0 +1,44 @@
+Request
+จงสร้าง schema สำหรับการตรวจสอบ object user sign in ด้วยการใช้ framework zod
+ข้อมูลที่รับสำหรับ user sign in คือ
+
+email: ต้องเป็น email ที่ถูก format
+password: ต้องมีอย่างน้อย 8 ตัว โดยที่ อย่างน้อยต้องมี 1 ตัวเลข และ 1 ตัวอักขระพิเศษ
+
+เมื่อได้ schema แล้วให้แสดงการใช้งานพร้อมคำอธิบายสั้นๆ ด้วย
+
+
+Response
+สามารถสร้าง zod schema ในภาษา javascript สำหรับ user sign in ที่รับข้อมูล email และ password โดยที่ email ต้องเป็น string ในรูปแบบที่ถูกต้องและ password ต้องมีอย่างน้อย 8 ตัวอักษร, มีอย่างน้อย 1 ตัวเลข และ 1 อักขระพิเศษ
+
+const { z } = require('zod');
+
+  // สร้าง schema สำหรับการ sign in ของ user
+  const userSignInSchema = z.object({
+    email: z.string().email({ message: "Invalid email format" }), // เป็น string ที่มีรูปแบบ email ถูกต้อง
+    password: z.string()
+               .min(8, { message: "Password must be at least 8 characters long" }) // มีความยาวอย่างน้อย 8 ตัวอักษร
+               .regex(/\d/, { message: "Password must contain at least one number" }) // มีตัวเลขอย่างน้อย 1 ตัว
+               .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: "Password must contain at least one special character" }) // มีอักขระพิเศษอย่างน้อย 1 ตัว
+  });
+  
+  // ตัวอย่าง schema ที่ถูกต้อง
+  const validSignInData = {
+    email: "user@example.com",
+    password: "Passw0rd!"
+  };
+  const result = userSignInSchema.parse(validSignInData);
+  console.log(result);
+
+  // ตัวอย่าง schema ที่ไม่ถูกต้องจะได้ error
+  const invalidSignInData = {
+    email: "user",
+    password: "password!"
+  };
+ userSignInSchema.parse(invalidSignInData);
+
+คำอธิบาย
+สร้าง schema สำหรับ user sign in ด้วยการใช้ zod library เพื่อกำหนดการตรวจความถูกต้องตามเงื่อนไข
+การใช้งาน schema สามารถทำได้ด้วยการใช้คำสั่ง userSignInSchema.parse ถ้าข้อมูลถูกต้องจะได้ผลลัพธ์เป็น json object ที่มี email และ passwordในกรณีที่ข้อมูลไม่ถูกต้องจะได้ error จาก zod ที่อธิบายว่าข้อมูลผิดพลาดอย่างไร
+
+ด้วยการใช้ Zod schema นี้ เราสามารถตรวจสอบความถูกต้องของข้อมูล user sign in ได้อย่างสะดวกมีประสิทธิภาพและใช้งานง่าย
