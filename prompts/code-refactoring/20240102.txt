@@ -1,0 +1,66 @@
+Request
+
+จง ปรับปรุง code ที่สร้างด้วยภาษา python สำหรับ function check_file_size เพื่อตรวจสอบ ไฟล์ที่มีการ upload เข้ามา
+สิ่งที่ต้องการคืออธิบายก่อนว่า code นี้มีปัญหาอะไรบ้าง
+ปรับปรุงโค้ดเพื่อให้กระชับขึ้น และเข้าใจได้ง่ายขึ้น logic ที่ถูกต้อง
+
+code ที่ต้องการ refactor คือ
+
+from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException
+def check_file_size(file: UploadFile):
+    if file is None:
+        raise HTTPException(status_code=400, detail="Input file cannot be None")
+  
+    max_size_mb = 10
+    max_size_bytes = max_size_mb * 1024 * 1024
+    
+    file_size = file.file.seek(0, 2)
+    if file_size > max_size_bytes:
+        raise HTTPException(status_code=400, detail=f"File size must be less than or equal to {max_size_mb} MB")
+    
+    file.file.seek(0)
+
+Response
+ก่อนที่เราจะปรับปรุงโค้ด ให้วิเคราะห์ปัญหาในปัจจุบัน:
+
+ปัญหาที่พบในโค้ด
+ตรวจสอบว่าไฟล์เป็น None: ใช้ if file is None: ไม่มีความจำเป็นเมื่อทำงานกับ UploadFile เนื่องจากภายใน FastAPI มีการตรวจสอบและเน้นการจัดการข้อผิดพลาดเรื่องนี้อยู่แล้ว จึง ไม่จำเป็นต้องตรวจสอบเพิ่มเติม ควรเน้นไปที่ UploadFile เอง
+การตั้งค่าขนาดไฟล์สูงสุด: ค่าคงที่คือ 10 MB ควรเก็บเป็นค่าคงที่แยกต่างหากและตั้งชื่อให้เหมาะสม
+การ import module: มีการ import module ที่เกิดความจำเป็น APIRouter, FastApi และ FIle
+อธิบายการทำงานคร่าวๆ ใน code: มี comment สำหรับการอธิบายการทำงานใน code เพื่อให้ผู้อ่านสามารถเข้าใจได้ดียิ่งขึ้น
+แก้ไขข้ความ error : แก้ไขข้อความกรณีเกิด error ให้ชัดเจนขึ้น เช่น มีการอธิบายว่าภายในไฟล์มีขนาดเกินกว่าค่าที่กำหนด
+
+การปรับปรุงโค้ด
+
+จากปัญหาที่พบเราสามารถปรับปรุงโค้ดได้เป็น
+
+from fastapi import UploadFile, File
+
+MAX_FILE_SIZE_MB = 10
+MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+
+def check_file_size(file: UploadFile):
+    """
+    ตรวจสอบว่าไฟล์มีขนาดไม่เกิน 10 MB
+    """
+    
+    # ขนาดสูงสุดที่อนุญาต (10 MB)
+    max_size_mb = 10
+    max_size_bytes = max_size_mb * 1024 * 1024
+    
+    # ตรวจสอบขนาดไฟล์ในหน่วย bytes
+    file_size = file.file.seek(0, 2)  # เลื่อน pointer ไปที่ท้ายไฟล์ตรวจสอบขนาดไฟล์
+    if file_size > max_size_bytes:
+        # ถ้าไฟล์เกินขนาด ส่ง HTTPException ด้วยรหัส 400
+        raise HTTPException(status_code=400, detail=f"File size must be less than or equal to {MAX_FILE_SIZE_MB} MB. Current size: {file_size / (1024 * 1024):.2f} MB")
+    
+    
+    file.file.seek(0)  # รีเซ็ตตำแหน่งไฟล์กลับไปที่จุดเริ่มต้น
+
+อธิบายการปรับปรุง
+ลบขั้นตอนการตรวจสอบว่า file เป็น None ออก
+ลบ import ที่ไม่จำเป็น คือ APIRouter, FastApi และ FIle
+ย้ายค่าคงที ่ : ขนาดไฟล์มากสุด (MAX_FILE_SIZE_MB และ MAX_FILE_SIZE_BYTES) เปลี่ยนเป็นค่าคงที่บรรทัดที่อยู่ด้านบน เพื่อให้เข้าถึงได้ง่าย โดยสามารถแก้ไขในจุดเดียวเมื่อจำเป็นได้
+ใส่ comment เพื่ออธิบายการทำงานของ code ในแต่ลขั้นตอนคร่าวๆ
+ข้อความ error สมควรจะมีรายละเอียดของขนาดไฟล์ปัจจุบันช่วยให้เข้าใจว่าทำไมถึงเกิดการขัดข้อง
+การปรับปรุงเหล่านี้ช่วยให้โค้ด มีความถูกต้อง กระชับขึ้น, ชัดเจนมากขึ้น และการให้ข้อมูลแก่ผู้ใช้งานที่ดีขึ้นมาก

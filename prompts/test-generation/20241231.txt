@@ -1,0 +1,494 @@
+Request
+จงสร้าง test case สำหรับใน javascript ด้วย test framework vitest สำหรับทดสอบ function factorial ที่กำหนดให้ใน prompt
+ผลลัพธ์ของ function คือ ผลคูณของจำนวนเต็มบวก ตั้งแต่ 1 ถึงจำนวนที่กำหนด n
+input ของ function นี้เป็นได้เฉพาะ เลขจำนวนเต็มบวก หรือ 0
+กรณี input เป็น 0 จะได้ผลลัพธ์คือ 1
+กรณี input ไม่ใช่ตัวเลขหรือ น้อยกว่า 0 ได้ error ว่า n must be positive integer
+
+export function factorial(n) {
+  if (n < 0) throw new Error("n must be positive integer");
+  return n === 0 ? 1 : n * factorial(n - 1);
+}
+
+อธิบายการ test case ที่สร้างเล็กน้อย
+ไม่จำเป็นต้องมีส่วนของ instruction เพื่อทดสอบ
+มี section ของการสรุปย่อ ๆ เกี่ยวกับ function นี้
+
+
+Request
+จงสร้าง test cases ที่เป็นภาษา javascript ด้วยการใช้ vitest framework เพื่อทดสอบว่า เป็น object ว่างหรือไม่ function
+ในกรณีที่ค่าที่ใส่มาเป็น null หรือ undefined จะได้ false
+ถ้าค่าที่ใส่มาไม่ใช่ประเภท object จะได้ error
+ค่า object ที่มีอย่างน้อย 1 key จะได้ true คือ object นั้นมี property ข้างใน
+
+function isNotEmptyObject(obj) {
+  if (obj === null || obj === undefined) {
+      return false;
+  }
+
+  if (typeof obj !== 'object') {
+      throw new Error("Invalid input: Input must be an object.");
+  }
+  
+  return Object.keys(obj).length > 0; 
+}
+
+อธิบายการ test case ที่สร้างเล็กน้อย
+ไม่จำเป็นต้องมีส่วนของ instruction เพื่อทดสอบ
+มี section ของการสรุปย่อ ๆ ของการทดสอบ function นี้
+
+Response
+เราสามารถ test cases สำหรับ function isNotEmptyObject ด้วยภาษา javascript โดยใช้ vitest framework เพื่อทดสอบความถูกต้องในการตรวจสอบว่า object นั้นเป็น object ว่างหรือไม่ ตามเงื่อนไขที่กำหนดไว้ และส่วนสรุปท้ายจะอธิบายถึงการทดสอบที่ครอบคลุมใน function นี้
+
+import { describe, it, expect } from 'vitest';
+import { isNotEmptyObject } from './path/to/your/function'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("isNotEmptyObject", () => {
+  // ใส่ค่า null
+  it("should return false for null input", () => {
+    expect(isNotEmptyObject(null)).toBe(false);
+  });
+
+  // ใส่ค่า undefined
+  it("should return false for undefined input", () => {
+    expect(isNotEmptyObject(undefined)).toBe(false);
+  });
+
+  // ทดสอบเมื่อไหร่ค่าเป็นตัวเลข
+  it("should throw an error for non-object input (e.g. number)", () => {
+    expect(() => isNotEmptyObject(42)).toThrow(
+      "Invalid input: Input must be an object."
+    );
+  });
+
+  // เมื่อใส่ค่าเป็นข้อความ
+  it("should throw an error for non-object input (e.g. string)", () => {
+    expect(() => isNotEmptyObject("string")).toThrow(
+      "Invalid input: Input must be an object."
+    );
+  });
+
+  // เมื่อใส่ค่าเป็นข้อมูลประเภท boolean
+  it("should throw an error for boolean input", () => {
+    expect(() => isNotEmptyObject(true)).toThrow(
+      "Invalid input: Input must be an object."
+    );
+  });
+
+  // function ใน javascript
+  it("should throw an error when input is a function", () => {
+    expect(() => isNotEmptyObject(function t() {})).toThrow(
+      "Invalid input: Input must be an object."
+    );
+  });
+
+  // ใส่ค่าเป็น object ที่ไม่มี key ใดๆ
+  it("should return false for an empty object", () => {
+    expect(isNotEmptyObject({})).toBe(false);
+  });
+
+  // ใส่ค่า object ที่มี key 1 ตัว
+  it("should return true for a non-empty object", () => {
+    expect(isNotEmptyObject({ key: "value" })).toBe(true);
+  });
+
+  // ใส่ค่า object ที่มี key หลายตัว
+  it("should return true for an object with multiple keys", () => {
+    expect(isNotEmptyObject({ a: 1, b: 2, c: 3 })).toBe(true);
+  });
+
+  // ใส่ค่า object ที่ซ้อนกันหลายชั้น
+  it("should return true for an object with nested object", () => {
+    expect(isNotEmptyObject({ nested: { key: "value" } })).toBe(true);
+  });
+
+  // array ใน javascript ถือว่าเป็น object
+  it("should return true when input is a non-empty array", () => {
+    expect(isNotEmptyObject([1, 2, 3])).toBe(true);
+  });
+});
+
+สรุปผลการทดสอบ
+
+Null และ Undefined: ฟังก์ชันตรวจสอบและคืนค่า false ทำให้ มั่นใจได้ว่าไม่มีข้อผิดพลาดเมื่อค่ามีค่าเป็น null หรือ undefined
+Non-Object Inputs: เมื่อ input ไม่ใช่ประเภท object เช่น string, number, boolean และ function function จะแสดง error ได้ถูกต้อง
+Empty Object: สามารถตรวจสอบว่า object ที่ไม่มี property ก็คือ object ว่าง และคืนค่า false ได้ถูกต้อง
+Non-Empty Object: สำหรับ object ที่มี property อย่างน้อยหนึ่งค่า ฟังก์ชันทำการคืนค่า true ได้อย่างถูกต้อง
+Nested Objects และ Multiple Keys: ฟังก์ชันยังทำงานได้ถูกต้องในกรณีที่มี keys มากกว่า 1 ตัว หรือมี object ที่ซ้อนกัน
+Array Object: array ใน javascript คือ object ประเภทหนึ่ง ทำให้ได้ผลลัพธ์เป็น  true
+
+การทดสอบเหล่านี้จะช่วยให้มั่นใจได้ว่าฟังก์ชัน isNotEmptyObject สามารถจัดการกับ input ที่ครอบคลุมกับสถานการณ์ต่างๆ และ การจัดการ error ได้อย่างถูกต้อง
+
+
+
+Request
+จงสร้าง test case ในภาษา javascript ที่ทำงานบน vitest เพื่อทดสอบ zod schema สำหรับ ProductSchema สำหรับข้อมูลของสินค้า ที่จะต้องมี id, ชื่อ, รายละเอียดสินค้า และ ราคา
+
+การทดสอบ schema ให้ใช้คำสั่ง schema.parse(value) เพื่อทดสอบ ถ้าค่าที่ใส่ให้ไม่ตรงกับ schema จะมี error เกิดขึ้น สามารถใช้ error ที่เกิดขึ้นทดสอบได้ว่าค่าที่ส่งให้ผิด
+
+import { z } from "zod";
+
+export const ProductSchema = z.object({
+  id: z.string().uuid("Id must be in uuid format"), // Assuming the ID is a UUID
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(), // Description is optional
+  price: z.number().positive("Price must be a positive number"),
+});
+
+ไม่ต้องมีคำอธิบาย test case ใน code
+คำอธิบายควรไปอยู่ใน section ของการสรุป ตอนท้าย และควรเป็นแบบย่อ
+
+Response
+ตัวอย่างสำหรับ test cases ที่เขียนโดย javascript ด้วยการใช้ vitest เพื่อทดสอบการทำงาน ProductSchema ด้วยการ ทดสอบข้อมูลในรูปแบบต่างๆ เพื่อให้แน่ใจว่า schema ทำงานได้ถูกต้อง
+
+import { describe, it, expect } from 'vitest';
+import { ProductSchema } from './path-to-your-schema-file'; // เปลี่ยน path ที่ถูกต้อง
+
+describe("ProductSchema", () => {
+  it("should parse valid product data", () => {
+    const validProduct = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      name: "Product Name",
+      description: "Product Description",
+      price: 99.99,
+    };
+    const parsed = ProductSchema.parse(validProduct);
+    expect(parsed).toEqual(validProduct);
+  });
+
+  it("should parse product data without description", () => {
+    const validProduct = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      name: "Product Name",
+      price: 49.99,
+    };
+    const parsed = ProductSchema.parse(validProduct);
+    expect(parsed).toEqual(validProduct);
+  });
+
+  it("should throw error for missing id", () => {
+    const invalidProduct = {
+      name: "Product Name",
+      price: 99.99,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError("Required");
+  });
+
+  it("should throw error for empty id", () => {
+    const invalidProduct = {
+      id: "",
+      name: "Product Name",
+      price: 99.99,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError(
+      "Id must be in uuid format"
+    );
+  });
+
+  it("should throw error for invalid uuid format id", () => {
+    const invalidProduct = {
+      id: "invalid-uuid",
+      name: "Product Name",
+      price: 99.99,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError(
+      "Id must be in uuid format"
+    );
+  });
+
+  it("should throw error for missing name", () => {
+    const invalidProduct = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      price: 99.99,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError("Required");
+  });
+
+  it("should throw error for empty name", () => {
+    const invalidProduct = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      name: "",
+      price: 99.99,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError(
+      "Name is required"
+    );
+  });
+
+
+  it("should throw error when price is 0", () => {
+    const product = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      name: "Product Name",
+      price: 0,
+    };
+    expect(() => ProductSchema.parse(product)).toThrowError("Price must be a positive number");
+  });
+  
+  it("should throw error for negative price", () => {
+    const invalidProduct = {
+      id: "d9b1d58d-3d2b-4b65-9f4e-bf8a7b7c0b7f",
+      name: "Product Name",
+      price: -10,
+    };
+    expect(() => ProductSchema.parse(invalidProduct)).toThrowError(
+      "Price must be a positive number"
+    );
+  });
+});
+
+สรุป: 
+
+Test case ที่ทดสอบมีดังนี้
+ทดสอบด้วยข้อมูลที่ถูกต้องครบทุก field
+ทดสอบด้วยข้อมูลที่ถูกต้องตาม field ที่จำเป็น
+ทดสอบผลลัพธ์ ถ้าไม่มีการใส่ค่า id, name หรือ ใส่เป็นค่าว่าง ว่าต้องมี error เกิดขึ้น
+ทดสอบกรณี id ไม่เป็น ไปตาม format uuid จะมี error เกิดขึ้น
+กรณีที่ price น้อยกว่า หรือ เท่ากับ 0 จะได้ error
+test cases เหล่านี้เป็นการทดสอบ schema ProductSchemaด้วยการกำหนด รูปแบบข้อมูล input ที่แตกต่างกัน เพื่อให้แน่ใจว่า schema สามารถทำงานได้ถูกต้องและได้รับ object ที่ถูกต้องตรงตามเงื่อนไข
+
+
+
+
+
+Request
+จงสร้าง test case เพื่อทำ unit test ด้วยภาษา javascript บน test framework vitest เพื่อทดสอบการทำงาน function daysBetweenDates 
+function นี้เป็นการหาจำนวนวันระหว่างวันที่ 2 วันที่ โดยใช้ Date object
+ผลลัพธ์ที่ได้เป็น number จำนวนเต็มเท่านั้น
+
+export function daysBetweenDates(date1 = new Date(), date2 = new Date()) {
+  const diffTime = Math.abs(new Date(date2) - new Date(date1));
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+มี comment บอกรายละเอียดคร่าวๆ แต่ละ test case ใน code ไม่ต้องแยกออกมาเป็น section
+ไม่ต้องมี instruction บอกวิธีการใช้ vitest เพื่อทดสอบ test case
+
+
+Response
+เราสามารถเขียน test case สำหรับทดสอบ function daysBetweenDates ที่เขียนด้วย javascript ด้วยการใช้ vitest ได้ดังนี้
+
+import { daysBetweenDates } from './path-to-your-function'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("Test daysBetweenDates", () => {
+  // วันทั้งสองวันเป็นวันเดียวผลลัพธ์ควรได้ 0
+  it("should return 0 when dates are the same", () => {
+    const sameDate = new Date();
+    expect(daysBetweenDates(sameDate, sameDate)).toBe(0);
+  });
+
+  // วันทั้งสองวันเป็น undefined
+  it("should return 0 when dates are undefined", () => {
+    expect(daysBetweenDates(undefined, undefined)).toBe(0);
+  });
+
+  // วันทั้งสองวันเป็น null
+  it("should return 0 when dates are null", () => {
+    expect(daysBetweenDates(null, null)).toBe(0);
+  });
+
+  // วันทั้งสองวัน ห่างกัน 1 วัน
+  it("should return 1 when dates are one day apart", () => {
+    const currentDate = new Date();
+    const oneDayDifference = new Date(currentDate);
+    oneDayDifference.setDate(currentDate.getDate() + 1);
+    expect(daysBetweenDates(currentDate, oneDayDifference)).toBe(1);
+  });
+
+  // ทดสอบระยะหว่างของวันด้วยการกำหนดวันที่เอง
+  it("should return the correct number of days between two dates", () => {
+    const earlierDate = new Date(2023, 11, 1);
+    const laterDate = new Date(2023, 11, 3);
+    expect(daysBetweenDates(earlierDate, laterDate)).toBe(2);
+  });
+
+  // ทดสอบกรณีที่วันข้ามปี
+  it("should handle dates in different years", () => {
+    const dateInFirstYear = new Date(2023, 11, 31);
+    const dateInAnotherYear = new Date(2024, 0, 1);
+    expect(daysBetweenDates(dateInFirstYear, dateInAnotherYear)).toBe(1);
+  });
+
+  // ทดสอบกรณีที่วันข้ามเดือน
+  it("should handle dates in different months", () => {
+    const dateInFirstMonth = new Date(2023, 11, 31);
+    const dateInAnotherMonth = new Date(2024, 1, 1);
+    expect(daysBetweenDates(dateInFirstMonth, dateInAnotherMonth)).toBe(32);
+  });
+
+  // วันที่แรกอยู่หลังวันที่ที่สอง
+  it("should return a positive number when second date is after first date", () => {
+    const firstDate = new Date(2023, 11, 3);
+    const secondDate = new Date(2023, 11, 1);
+    expect(daysBetweenDates(firstDate, secondDate)).toBe(2);
+  });
+
+  // สามารถจัดการกรณีปีอธิกสุรทิน, 2024 is a leap year
+  test("should handle leap years", () => {
+    const firstDateInLeapYear = new Date(2024, 1, 28);
+    const secondDateInLeapYear = new Date(2024, 2, 1);
+    expect(daysBetweenDates(firstDateInLeapYear, secondDateInLeapYear)).toBe(2);
+  });
+
+  // สามารถจัดการกรณีวันที่ในอนาคต
+  test("should handle dates in the future", () => {
+    const currentDate = new Date();
+    const nextYear = new Date(currentDate);
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    expect(daysBetweenDates(currentDate, nextYear)).toBeGreaterThanOrEqual(365);
+  });
+});
+
+สรุป
+
+Test case สำหรับการทดสอบ daysBetweenDates มีการทดสอบด้วยข้อมูลที่ครอบคลุมกรณีต่างๆ เช่น
+วันที่สองวันเป็นวันเดียวกัน
+วันที่ทั้งสองห่างกันหนึ่งวัน
+วันที่ทั้งสองมีเดือน หรือ ปีคั่นกลาง
+วันที่เป็นปีอธิกสุรทิน
+วันที่ในอนาคต
+ทดสอบเมื่อมีการส่งค่า undefined หรือ null
+
+ด้วยชุดทดสอบเหล่านี้ทำให้มั่นใจได้ว่า function daysBetweenDates สามารถจัดการกับข้อมูลได้หลากหลายและไม่เกิด error เมื่อมีการส่งข้อมูลที่เป็น null และ undefined
+
+
+
+
+
+
+
+Request
+จงสร้าง test cases ในภาษา javascript ที่ทำงานบน test framework ชื่อ vitest เพื่อทดสอบการทำงาน function formatCurrency
+
+ในการทดสอบนี้เป็นการทดสอบด้วย currency THB และ locale เป็น th-TH เท่านั้น
+format ของผลลัพธ์ที่ได้คือ ฿#,###.## กรณีมี , หรือ  ฿###.## กรณีที่ไม่ต้องแสดง ,
+ผลลัพธ์ที่จะแสดงทศนิยมอย่างน้อย 2 ตำแหน่งเสมอ
+
+กรณี edge case
+input เป็น 0 จะได้ ฿0.00
+กรณีเป็น string ที่แปลงเป็นตัวเลขไม่ได้ จะได้ ฿NaN
+
+ไม่จำเป็นต้องเทสกรณีที่ส่งค่า boolean และ object ประเภทอื่น
+
+export function formatCurrency(amount = 0, currency = "THB", locale = "th-TH") {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+ไม่ต้องมี instruction สำหรับ run vitest
+แต่ละ test case ไม่ต้องมีคำอธิบายการทำงานแบบคร่าวๆที่เป็น comment
+มีส่วนสรุปแยกออกมาจาก code เพื่อสรุปการทดสอบ
+
+
+
+
+
+
+
+
+
+Request
+จงสร้าง test cases ในภาษา javascript ด้วยการใช้ vitest เพื่อทดสอบ function deepClone.
+
+test case ที่สร้างให้ทำเฉพาะ object เท่านั้น ข้อมูลประเภท string, number, date, และ boolean ไม่ต้องสร้าง เพราะต้องการเน้นไปที่การใช้งานกับ object และ user รู้อยู่แล้วว่าจะใช้อย่างไร
+
+test case ที่ต้องมีคือ nested object ที่ซ้อนกัน เพื่อทดสอบ reference
+สิ่งสำคัญของการ test คือ ต้องแน่ใจว่าเมื่อแก้ค่า property object ที่ clone ออกมา จะไม่ได้แก้ object ต้นแบบด้วย
+
+export function deepClone(obj) {
+  if (!obj) return obj;
+  return JSON.parse(JSON.stringify(obj));
+}
+
+ไม่ต้องเขียนคำอธิบายแต่ละ test case ใน source code
+หัวข้อของ test case ควรจะอธิบายได้ด้วยตัวเองแล้ว
+
+Response
+ตัวอย่าง test case ที่สร้างด้วย javascript ด้วยการใช้ vitest เป็น test framework สำหรับตรวจสอบ function deepClone ที่ object ใหม่ที่สร้างมามีโครงสร้างและค่าเหมือนกับ object ต้นทาง และ ไม่มี reference ใดๆ เกี่ยวข้องกับ object ตั้ง
+
+import { describe, it, expect } from 'vitest';
+import { deepClone } from './yourModule'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("deepClone", () => {
+  it("should clone a flat object", () => {
+    const original = { a: 1, b: 2, c: 3 };
+    const cloned = deepClone(original);
+    expect(cloned).toEqual(original);
+    expect(cloned).not.toBe(original);
+  });
+
+  it("should clone a nested object", () => {
+    const original = { a: 1, b: { c: 2, d: { e: 3 } } };
+    const cloned = deepClone(original);
+    expect(cloned).toEqual(original);
+    expect(cloned).not.toBe(original);
+    expect(cloned.b).not.toBe(original.b);
+    expect(cloned.b.d).not.toBe(original.b.d);
+  });
+
+  it("modifying cloned object should not affect the original", () => {
+    const original = { a: 1, b: { c: 2, d: { e: 3 } } };
+    const cloned = deepClone(original);
+
+    const bcValue = 42;
+    const bdeValue = 99;
+    cloned.b.c = bcValue;
+    cloned.b.d.e = bdeValue;
+    expect(cloned.b.c).toBe(bcValue);
+    expect(cloned.b.d.e).toBe(bdeValue);
+
+    expect(original.b.c).toBe(2);
+    expect(original.b.d.e).toBe(3);
+  });
+
+  it("should handle objects with array properties", () => {
+    const original = { a: [1, 2, 3], b: { c: [4, 5] } };
+    const cloned = deepClone(original);
+    expect(cloned).toEqual(original);
+    expect(cloned).not.toBe(original);
+    expect(cloned.a).not.toBe(original.a);
+    expect(cloned.b.c).not.toBe(original.b.c);
+  });
+
+  it("modifying arrays in cloned object should not affect the original", () => {
+    const original = { a: [1, 2, 3], b: { c: [4, 5] } };
+    const cloned = deepClone(original);
+
+    const aValue = 6;
+    const bcValue = 99;
+    cloned.a.push(aValue);
+    cloned.b.c[0] = bcValue;
+    expect(cloned.a).toEqual([1, 2, 3, aValue]);
+    expect(cloned.b.c).toEqual([bcValue, 5]);
+
+    expect(original.a).toEqual([1, 2, 3]);
+    expect(original.b.c).toEqual([4, 5]);
+  });
+
+  it("should return null when null is provided", () => {
+    const original = null;
+    const cloned = deepClone(original);
+    expect(original).toBe(cloned);
+    expect(cloned).toBeNull();
+  });
+
+  it("should return undefined when null is provided", () => {
+    const original = undefined;
+    const cloned = deepClone(original);
+    expect(original).toBe(cloned);
+    expect(cloned).toBeUndefined();
+  });
+});
+
+สรุป:
+
+Test case สำหรับทดสอบสรุปได้ดังนี้
+ทดสอบด้วย object ชั้นเดียว
+object ที่มี object หลายชั้นซ้อนกัน
+object ที่มี array
+ทดสอบ null และ undefined
+
+การทดสอบของ test cases เหล่านี้ ส่งข้อมูลประเภทต่างๆกัน เพื่อให้มั่นใจได้ว่า function deepClone สามารถทำงานได้ถูกต้องในทุกกรณี และมั่นใจได้ว่า object ที่สร้างใหม่และต้นทางเป็นคนตัวโดยสิ้นเชิง รวมทั้งมีการจัดการกรณี undefined และ null เพื่อป้องกันการเกิด error

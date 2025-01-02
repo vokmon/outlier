@@ -1,0 +1,150 @@
+Request
+จงสร้าง test cases แบบ unit test ด้วยภาษา javascript ที่ใช้ vitest เป็น test framework เพื่อทดสอบการทำงาน function percentageChange
+หน้าที่ของ function นี้เป็นการหา % การเปลี่ยนแปลงของตัวเลขสองตัว
+ข้อมูลที่ใช้ทดสอบให้ใช้เฉพาะตัวเลขที่บวก หรือ จำนวนติดลบได้
+สามารถตัดกรณีส่งข้อมูลประเภทอื่นได้
+
+
+const percentageChange = (oldValue = 0, newValue = 0) => {
+  if (oldValue === null || newValue === null) {
+    throw new Error("The arguments oldValue and newValue cannot be null.");
+  }
+  return ((newValue - oldValue) / Math.abs(oldValue)) * 100;
+};
+
+มี section แยกสำหรับสรุป test cases
+ไม่ต้องมี comment ใน source code อธิบาย test case ชื่อ title ของ test case ควรตั้งให้เข้าใจ
+
+Response
+ตัวอย่าง test case ที่สร้างด้วย javascript ด้วยการใช้ vitest เป็น test framework เพื่อทดสอบ function percentageChange ในการคำนวณเปอร์เซนต์การเปลี่ยนแปลงของสองตัวเลข ในการทดสอบนี้จะทดสอบเฉพาะข้อมูลที่เป็นตัวเลขเท่านั้น
+
+import { percentageChange } from "path-to-your-module"; เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe("percentageChange", () => {
+  test("should return 100% for positive increase", () => {
+    expect(percentageChange(10, 20)).toBe(100);
+  });
+
+  test("should return -50% for positive decrease", () => {
+    expect(percentageChange(20, 10)).toBe(-50);
+  });
+
+  test("should return 0% for no change", () => {
+    expect(percentageChange(10, 10)).toBe(0);
+  });
+
+  test("should return correct value for decimal values", () => {
+    expect(percentageChange(56.55, 47.40)).toBe(-16.180371352785144);
+  });
+
+  test("should return -100% change for dobouling decrease with negative numbers", () => {
+    expect(percentageChange(-10, -20)).toBe(-100);
+  });
+
+  test("should calculate the correct percentage change for zero new value", () => {
+    expect(percentageChange(10, 0)).toBe(-100);
+  });
+
+  test("should return Infinity for zero old value", () => {
+    expect(percentageChange(0, 20)).toBe(Infinity);
+  });
+
+  test("should throw an error when old value is null", () => {
+    expect(() => percentageChange(null, 10)).toThrow(
+      /The arguments oldValue and newValue cannot be null./
+    );
+  });
+
+  test("should throw an error when new value is null", () => {
+    expect(() => percentageChange(10, null)).toThrow(
+      /The arguments oldValue and newValue cannot be null./
+    );
+  });
+});
+
+Test case สำหรับทดสอบสรุปได้ดังนี้
+ข้อมูลที่เป็นตัวเลขจำนวนเต็มบวก
+ข้อมูลที่เป็นตัวเลขจำนวนเต็มลบ
+ทดสอบด้วยข้อมูลที่มีทศนิยม
+ได้ค่า Infinity เมื่อค่าตั้งต้นเป็น 0 เป็นการทดสอบ edge case
+ทดสอบ edge case เมื่อค่าใดค่าหนึ่งเป็น null
+การทดสอบของ test cases ด้วยข้อมูลต่างๆ เหล่านี้ ทำให้มั่นใจได้ว่า function percentageChange จะสามารถทำงานได้ถูกต้องในทุกกรณี และไม่เกิด error ขึ้นเมื่อมีการส่ง null ให้กับ function
+
+
+
+
+
+
+Request
+จงสร้าง function ที่เขียนโดย javascript โดยใช้ vitest เป็น test framework สำหรับทดสอบ function formatBytes
+function นี้เป็นการแปลงจำนวนตัวเลขี่เป็นจำนวนเต็มหรือทศนิยม bytes ให้เป็นจำนวนที่อ่านเข้าใจง่ายขึ้น
+การทดสอบนี้ให้ทดสอบเฉพาะจำนวนตัวเลขเท่านั้น data type อื่นๆ ไม่ต้องทดสอบ
+ตัวเลขที่ใส่สามารถเป็นเลขติดลบได้
+ผลลัพธ์ที่จะได้จะเป็น format ดังนี้
+0,000.00 B หรือ -0,000.00 B กรณีเป็นค่าติดลบ
+มี comma คั่น
+มีทศนิยม 2 ตำแหน่ง
+มีsuffix ว่าเป็น B, KB, MB, GB หรือ TB
+
+
+export function formatBytes(bytes = 0) {
+  if (bytes === null) {
+    throw new Error("Byte cannot be null.");
+  }
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let size = bytes;
+  let unitIndex = 0;
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+  return `${new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(size)} ${units[unitIndex]}`;
+}
+
+ไม่ต้องมี instruction การ install และ รัน vitest
+ไม่ต้องมี comment เพื่ออธิบาย test case ใน code
+มีส่วนของสรุปที่แยกออกมาจาก code เพื่ออธิบายการทำงานของ test case
+
+
+Request
+จงสร้าง test case ที่เขียนด้วย javascript บน vitest framework เพื่อทดสอบการทำงาน function truncateString
+function นี้มีหน้าที่ในการตัดคำที่เกินออกและแทนที่ด้วย ...
+
+str คือ ข้อความที่ต้องการตัดเมื่อมีความยาวเกินที่กำหนด
+length คือขนาดข้อความ ถ้ายาวเกินจะตัดและแสดง ...
+กรณีที่ length ไม่ใส่มา หรือ ใส่ค่าน้อยกว่าหรือเท่ากับ 0 หมายความว่าไม่ต้องมีการตัดข้อความ
+
+export const truncateString = (str = "", length = 0) => {
+  if (str === null) {
+    return "";
+  }
+  if (length === 0) {
+    str;
+  }
+  if (str.length <= length) return str;
+  return str.slice(0, length) + "...";
+};
+
+ไม่ต้องมี instruction การ install และ รัน vitest
+ไม่ต้องมี comment เพื่ออธิบาย test case ใน code
+มีส่วนของสรุปที่แยกออกมาจาก code เพื่ออธิบายการทำงานของ test case
+มีส่วนของ introduction เกริ่นนำก่อนแสดง solution ด้วย
+
+
+Request
+จงสร้าง test case ที่เป็นภาษา javascript ด้วย framework vitest เพื่อทดสอบ schema ที่สร้างด้วย zod framework
+
+const bookSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  author: z.string().min(1, "Author is required"),
+  publishedYear: z.number().int().min(1000, "Year must be a valid year")
+});
+
+การทดสอบ schema ให้ใช้คำสั่ง schema.parse(value) เพื่อทดสอบ ถ้าค่าที่ใส่ให้ไม่ตรงกับ schema จะมี error เกิดขึ้น สามารถใช้ error ที่เกิดขึ้นทดสอบได้ว่าค่าที่ส่งให้ผิด
+
+ไม่ต้องมีส่วนบรรยาย introduction และ ส่วนสรุป
+ให้แสดงผลลัพธ์ส่วนที่เป็น coding เท่านั้น
+สามารถมี comment ใน code ได้ และ comment
