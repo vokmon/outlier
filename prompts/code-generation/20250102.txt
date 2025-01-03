@@ -1,0 +1,63 @@
+Request
+จงสร้าง function สำหรับการตรวจสอบ password ที่สร้างด้วยภาษา python
+ชื่อ function คือ validate_password โดยรับ argument password เป็นประเภท string
+ต้องไม่เป็น None
+ต้องมีความยาวไม่น้อยกว่า 8 ตัวอักษร
+ต้องมีอย่างน้อยตัวเลข 1 ตัว
+ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว ตามรายการนี้ [!@#$%^&*(),.?":{}|<>]
+กรณีที่เงื่อนไขไม่ตรงจะต้องเกิด error ที่สื่อความหมาย
+ในกรณีที่ข้อมูลถูกต้องไม่เกิด error ใดๆ
+
+ใน code ควรมี document ของ function และมีคำอธิบายการทำงานใน code
+
+
+Response
+นี่คือการสร้างฟังก์ชัน validate_password ในภาษา Python ที่มีการตรวจสอบตามเงื่อนไขที่ ไม่เป็น None, มีความยาวอย่างน้อย 8 ตัวอักษร, มีตัวเลขอย่างน้อย 1 ตัว และอักขระพิเศษ อย่างน้อย 1 ตัว พร้อมกับเอกสารอธิบายฟังก์ชัน:
+
+import string
+
+def validate_password(password: str) -> None:
+    """
+    ตรวจสอบความถูกต้องของ Password
+    โดย Password จะต้องเพิ่มเติมตามเงื่อนไขที่กำหนด
+    - ไม่สามารถเป็น None
+    - มีความยาวอย่างน้อย 8 ตัวอักษร
+    - มีตัวเลข (0-9) อย่างน้อย 1 ตัว
+    - มีอักขระพิเศษ [!@#$%^&*(),.?":{}|<>] อย่างน้อยหนึ่งตัว
+
+    Args:
+        password (str): Password ที่จะต้องการตรวจสอบ
+
+    Raises:
+        ValueError: กรณีที่ Password ไม่ถูกต้องตรงกับเงื่อนไขที่กำหนด
+    """
+
+    # ไม่สามารถเป็น None ได้
+    if password is None:
+        raise ValueError("Password cannot be None.")
+
+    # ต้องมีความยาวไม่น้อยกว่า 8 ตัวอักษร
+    if len(password) < 8:
+        raise ValueError("Password must be at least 8 characters long.")
+
+    special_chars = set(string.punctuation)
+
+    # ต้องมีตัวเลขอย่างน้อย 1 ตัว
+    if not any(char.isdigit() for char in password):
+        raise ValueError("Password must contain at least one digit.")
+
+    # ต้องมีอักษรพิเศษอย่างน้อย 1 ตัว
+    if not any(char in special_chars for char in password):
+        raise ValueError(f'Password must contain at least one special character from the list {string.punctuation}.')
+
+# ตัวอย่างการใช้งาน
+
+# ข้อมูลที่ถูกต้อง
+validate_password("MyPassword123!")
+
+# ไม่มีตัวเลขใน password จะเกิด error "Password must contain at least one digit."
+validate_password("mypassword!") 
+
+
+
+function ที่สร้างนี้สามารถใช้ตรวจสอบข้อมูล password ที่ตรงตามเงื่อนไขที่กำหนด พร้อมกับจัดการข้อผิดพลาดและแสดงความที่สามารถทำให้ผู้ใช้ทราบถึงสาเหตุที่ข้อมูลที่ใส่ให้กับ function ไม่ตรงเงื่อนไข

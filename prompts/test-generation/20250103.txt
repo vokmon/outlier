@@ -1,0 +1,17 @@
+Request
+จงสร้าง test case โดยใช้ภาษา python สำหรับทดสอบ function factorial ที่กำหนดให้ใน prompt
+
+ผลลัพธ์ของ function คือ ผลคูณของจำนวนเต็มบวก ตั้งแต่ 1 ถึงจำนวนที่กำหนด n
+input ของ function นี้เป็นได้เฉพาะ เลขจำนวนเต็มบวก หรือ 0
+กรณี input เป็น 0 จะได้ผลลัพธ์คือ 1
+กรณี input ไม่ใช่ตัวเลขหรือ น้อยกว่า 0 ได้ error ว่า "Factorial is not defined for negative numbers."
+
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    return 1 if n == 0 else n * factorial(n - 1)
+
+คำอธิบายให้ทำเป็น comment ใน code ไปได้เลย และ ไม่ต้องมีส่วนแยกหัวข้อ
+แสดงหัวข้อสรุปตอนท้าย
+
+Response
