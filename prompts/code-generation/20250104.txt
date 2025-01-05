@@ -1,0 +1,48 @@
+Request
+จงสร้าง function สำหรับการคำนวนค่า factorial ที่สร้างด้วยภาษา python เพื่อคำนวนผลคูณจำนวนเต็มบวกตั้ง 1 จนถึงค่าที่กำหนดให้
+
+ชื่อ function คือ factorial
+โดยมี input เป็นค่าจำนวนเต็มตั้งแต่ 0 ถึง 1000
+ผลลัพธ์คือ ผลคูณของ 1 ถึง ค่าที่กำหนด, กรณี n เป็น 0 ผลลัพธ์เป็น 1
+ให้ error  ValueError: กรณี n ไม่อยู่ในช่วง 0 - 1000
+
+ใน function มีเอกสารการอธิบาย และ comment อธิบายใน code ไปเลย ไม่ต้องแยกการอธิบายออกมาเป็นหัวข้อต่างหาก
+
+Response
+สามารถสร้าง function ชื่อ factorial ที่สร้างด้วย Python เพื่อคำนวนค่าผลคูณของจำนวนเต็มบวกจนถึงค่าที่กำหนดได้ดังนี้
+
+def factorial(n):
+    """
+    คำนวนผลคูณของจำนวนเต็มบวกตั้งแต่ 1 ถึง ค่า n ที่กำหนด
+    
+    :ค่าที่รับ n: จำนวนเต็มบวก มีค่าระหว่าง 0 ถึง 1000
+              
+    :ผลลัพธ์: ผลคูณของ 1 ถึง ค่าที่กำหนด, กรณี n เป็น 0 ผลลัพธ์เป็น 1
+    
+    :raises ValueError: กรณี n ไม่อยู่ในช่วง 0 - 1000
+    """
+
+    # ตรวจสอบว่าค่าที่รับมาเป็นเลขจำนวนเต็ม และ อยู่ในช่วง 0 ถึง 1000
+    if not isinstance(n, int) or n < 0 or n > 1000:
+        raise ValueError("Input must be a non-negative integer from 0 to 1000.")
+    
+    # กรณี n เป็น 0 ผลลัพธ์คือ 1
+    if n == 0:
+        return 1
+    
+    # คำนวน factorial โดยใช้ loop
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    
+    return result
+
+ตัวอย่างการใช้งาน
+
+print(factorial(5))  # ผลลัพธ์: 120
+print(factorial(0))  # ผลลัพธ์: 1
+print(factorial(10000))  # ได้ error ValueError: Input must be a non-negative integer from 0 to 1000.
+
+สรุป
+
+ผู้ใช้สามารถนำ function factorial ที่สร้างด้วยภาษา Python ไปงานได้อย่างมั่นใจว่าจะให้ผลลัพธ์ที่ถูกต้องและสามารถจัดการกับ error จากการใส่ข้อมูลที่ผิดพลาดได้

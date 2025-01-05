@@ -14,4 +14,99 @@ def factorial(n: int) -> int:
 คำอธิบายให้ทำเป็น comment ใน code ไปได้เลย และ ไม่ต้องมีส่วนแยกหัวข้อ
 แสดงหัวข้อสรุปตอนท้าย
 
+
+
+
+
+
+
+
+Request
+จงสร้าง test case โดยใช้ภาษา python สำหรับทดสอบ function to_title_case ที่กำหนดให้ใน prompt
+function ทำหน้าที่แปลงข้อความให้เป็น title case คือตัวอักษรแรกในแต่ละเป็นตัวพิมพ์ใหญ่และที่เหลือในคำคือตัวพิมพ์เล็ก
+ข้อมูลที่จะใช้ทดสอบใช้ภาษาอังกฤษเท่านั้น
+
+test case ต้องมีการทดสอบกรณี edge case เช่น  ข้อความเป็นค่าว่าง
+
+def to_title_case(text: str) -> str:
+    if not text:
+        return ""
+    return ' '.join(word.lower().capitalize() for word in text.split())
+
+
+เขียน คำอธิบาย comment ใน test case เลย ไม่ต้องแยกออกมาเป็นหัวข้อ
+มี summary แยกออกมาจาก source code โดยทำเป็นหัวข้อให้อ่านง่ายๆ
+
 Response
+การทดสอบนี้มีจุดประสงค์เพื่อยืนยันความถูกต้องของฟังก์ชัน to_title_case ที่ทำหน้าที่ในการแปลงข้อความภาษาอังกฤษให้กลายเป็น title case โดยที่ test cases ที่สร้างมีการทดสอบ function ว่าสามารถรับข้อความในภาษาอังกฤษในกรณีต่างได้รวมทั้งกรณีที่มีอักขระพิเศษและตัวเลข
+
+import unittest
+from your_module import to_title_case // เปลี่ยนเป็น module ที่ถูกต้อง
+
+class TestToTitleCase(unittest.TestCase):
+  def test_empty_string(self):
+      # ส่งค่าว่างควรได้ค่าว่าง
+      self.assertEqual(to_title_case(""), "", "An empty string should return an empty string")
+
+  def test_spaces_string(self):
+      # ส่งค่าว่างแบบเป็น space หลายๆตัว แล้วได้ค่าว่าง
+      self.assertEqual(to_title_case("     "),"", "An empty string with spaces should return an empty string")
+      
+  def test_none_case(self):
+      # ค่า None แล้วได้ผลลัพธ์เป็นค่าว่าง
+      self.assertEqual(to_title_case(None),"", "None should return an empty string")
+      
+  def test_title_case_string(self):
+      # ข้อความที่เป็น title case ผลลัพธ์จะไม่มีการเปลี่ยนแปลง
+      self.assertEqual(to_title_case("Already In Title Case"), "Already In Title Case", "Result should be unchanged if already correct")
+      
+  def test_single_word_lowercase(self):
+      # ทดสอบด้วยคำที่เป็นตัวพิมพ์เล็ก ผลลัพธ์คือตัวอักษรแรกถูกแปลงเป็นพิมพ์ใหญ่
+      self.assertEqual(to_title_case("hello"), "Hello", "Test with a single lowercase word, should capitalize the first letter")
+
+  def test_single_word_uppercase(self):
+      # คำที่เป็นตัวพิมพ์ใหญ่ทั้งหมด ผลลัพธ์คือตัวอักษรแรกถูกแปลงเป็นพิมพ์ใหญ่และที่เหลือเป็นตัวเล็ก
+      self.assertEqual(to_title_case("HELLO"), "Hello", "Single uppercase word, should convert to title case")
+
+  def test_sentence_lowercase(self):
+      # ประโยคที่เป็นตัวพิมพ์เล็กทั้งหมด ผลลัพธ์คือตัวอักษรแรกในทุกคำเป็นตัวพิมพ์ใหญ่
+      self.assertEqual(to_title_case("hello world"), "Hello World", "Sentence in lowercase should capitalize each word")
+
+  def test_sentence_uppercase(self):
+      # ประโยคที่เป็นตัวพิมพ์ใหญ่ทั้งหมด ผลลัพธ์คือตัวอักษรแรกในทุกคำเป็นตัวพิมพ์ใหญ่และที่เหลือในคำเป็นพิมพ์เล็ก
+      self.assertEqual(to_title_case("HELLO WORLD"), "Hello World", "Sentence in uppercase should convert to title case")
+
+  def test_mixed_case(self):
+      # มีตัวอักษรใหญ่และเล็กผสมกันในประโยค
+      self.assertEqual(to_title_case("hElLo WoRLd"), "Hello World", "A sentence in mixed case should convert to title case")
+
+  def test_punctuation(self):
+      # ตัวอักขระพิเศษในประโยคไม่มีการเปลี่ยนแปลง
+      self.assertEqual(to_title_case("hello, world! how're things?"), "Hello, World! How're Things?", "Punctuation should remain unaffected")
+
+  def test_numbers(self):
+      # ตัวเลขในข้อความไม่มีการเปลี่ยนแปลง
+      self.assertEqual(to_title_case("hello world 123"), "Hello World 123", "Numbers should remain unaffected")
+
+  def test_multiple_spaces(self):
+      # มีช่องว่างระหว่างคำแรกและคำสุดท้าย
+      self.assertEqual(to_title_case("   leading and trailing   "), "Leading And Trailing", "Multiple spaces should normalize spaces between words")
+
+  def test_single_letter_words(self):
+      # ประโยคประกอบด้วยคำที่มี 1 ตัวอักษรหลายๆ ตัว
+      self.assertEqual(to_title_case("a b c"), "A B C", "Single letter words each should be capitalized")
+
+  def test_mixed_with_non_letters(self):
+      # ตัวอักขระพิเศษที่ไม่ได้อยู่ในคำใดๆ
+      self.assertEqual(to_title_case("123 abc !@#"), "123 Abc !@#", "Should handle mixed characters including non-letters")
+
+if __name__ == "__main__":
+    unittest.main()
+
+สรุปการทดสอบ: จาก test case ที่สร้างนั้นมีการทดสอบกรณีต่าง
+สามารถจัดการกรณี edge case ที่มีการใส่ค่าเป็นว่าง, ช่องว่าง และ None ได้โดยไม่มี error
+ทำงานถูกต้องเมื่อข้อความที่ใส่เป็นข้อความที่เป็น title case อยู่แล้ว
+จัดการกรณีมีตัวเลข และ อักขระพิเศษที่อยู่ในข้อความได้ถูกต้อง
+ทำงานถูกต้องในกรณีที่ข้อความที่ไม่ได้เป็น title case เช่นทั้งข้อความหรือคำเป็นตัวพิมพ์ใหญ่หรือเล็กทั้งหมด หรือ ผสมกัน
+
+test cases เหล่านี้มีการตรวจสอบทุกกรณีที่ครอบคลุมกรณีต่างๆ ทำให้มั่นใจได้ว่า function to_title_case สามารถทำงานได้อย่างถูกต้อง

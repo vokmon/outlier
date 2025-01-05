@@ -1,0 +1,31 @@
+Request
+จากตัวอย่าง function สำหรับการคำนวนผลคูณจำนวนเต็มบวกจนถึงจำนวนที่กำหนด
+
+test cases ที่ใช้ สำหรับ test function นี้มีดังนี้
+1. factorial ของ 0 คือ 1
+2. factorial ของ 1 คือ 1
+3. ใส่ค่าของค่าจำนวนเต็มบวกแล้วได้ค่าที่ถูกต้อง
+4. มี error กรณีใส่ค่าติดลบ
+5. ใส่ค่าของค่าจำนวนเต็มบวกที่มี 1000 แล้วได้ค่าที่ถูกต้อง
+
+เนื่องจาก function รับข้อมูลประเภทจำนวนเต็มอยู่แล้ว test case ที่ทดสอบการใส่ค่าประเภทอื่น ไม่จำเป็น
+
+def factorial(n: in):
+    if not n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    
+    if n == 0:
+        return 1
+    
+    # คำนวน factorial โดยใช้ loop
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    
+    return result
+
+จงวิเคราะห์ว่า test case เหล่านี้ว่าเป็นอย่างไร ครอบคลุมกรณีต่างๆหรือไม่ การ test edge case ต่างๆ
+รูปแบบควรเป็นดังนี้
+introduction, ส่วนวิเคราะห์ และ สรุปว่าควรมี test case เพิ่ม หรือ ตัดออก หรือ ดีอยู่แล้ว
+
+Response
