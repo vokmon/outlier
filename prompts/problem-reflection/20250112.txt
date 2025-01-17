@@ -1,0 +1,61 @@
+Request
+จาก code ตัวอย่างนี้ที่สร้างด้วยภาษา javascript สำหรับการคำนวนค่าส่วนลด ที่รับราคาและเปอร์เซนต์ส่วนลด เป็นจำนวนบวกทั้งคู่
+หากค่าใดค่าหนึ่งไม่ใช่จำนวนบวกที่มากกว่า 0 จะได้ error และข้อความที่บอกสาเหตุ
+
+รูปแบบของผลลัพธ์คือ
+คำนำ, การวิเคราะห์ , ในกรณีที่ function นี้มีปัญหา จะสามารถใช้อะไรแทนได้ และ สรุป
+
+function calculateDiscount(price, discountPercentage) {
+  if (price <= 0 || discountPercentage <= 0) {
+    throw new Error("Price and discount percentage greater than 0.");
+  }
+  return price - (price * discountPercentage / 100);
+}
+
+
+
+Response
+โค้ดภาษา JavaScript ที่ให้มานี้เป็นฟังก์ชัน calculateDiscount ที่ใช้ในการคำนวณราคาหลังหักส่วนลด โดยรับค่า price (ราคาเต็ม) และ discountPercentage (เปอร์เซ็นต์ส่วนลด) ฟังก์ชันนี้จะตรวจสอบให้แน่ใจว่าราคาและเปอร์เซ็นต์ส่วนลดมีค่ามากกว่า 0 ถ้าไม่เช่นนั้นจะส่งข้อผิดพลาดพร้อมข้อความที่เกี่ยวข้อง
+
+การวิเคราะห์
+
+การทำงาน
+เริ่มโดยการตรวจสอบเงื่อนไขว่า price และ discountPercentage ต้องมีค่ามากกว่า 0 มิฉะนั้นจะส่งข้อผิดพลาดพร้อมข้อความ "Price and discount percentage must be greater than 0."
+ถ้าทุกค่าเป็นไปตามข้อกำหนด จะคำนวณราคาหลังหักส่วนลดด้วยสูตร price - (price * discountPercentage / 100)
+ผลลัพธ์สุดท้ายคือราคาหลังหักส่วนลดที่คืนค่ากลับไป
+
+ปัญหาที่อาจพบได้
+ไม่มีการตรวจสอบค่าประเภท null หรือ undefined อาจะทำให้เกิด error ที่ไม่คาดคิดใน function 
+ไม่มีการตรวจสอบ discountPercentage ต้องน้อยกว่าหรือเท่ากับ 100 กรณีที่มีค่ามากกว่า 100 จะทำให้ได้ผลลัพธ์ที่ผิดพลาดที่เป็นค่าติดลบ
+function นี้ไม่มีการตรวจสอบประเภทของค่าที่รับเข้ามาว่าเป็นประเภท number ก่อนการตรวจสอบว่าค่าต้องมากกว่า 0
+ผลลัพธ์ทศนิยมไม่จำกัดตำแหน่ง ทำให้ผู้เรียกใช้ต่างคนต่างจัดการกันเองซึ่งอาจทำให้การใช้งานไม่สอดคล้องกันได้
+
+ข้อแนะนำ
+ตรวจสอบ null และ undefined ของค่าที่รับมา
+
+// ตรวจสอบ null หรือ undefined
+    if (price === null || price === undefined || discountPercentage === null || discountPercentage === undefined) {
+      throw new Error("Price and discount percentage must be provided and cannot be null or undefined.");
+    }
+
+ตรวจสอบ ประเภทของค่าที่รับมาต้องเป็นตัวเลข เพื่อให้สามารถคำนวณส่วนลดได้
+
+// ตรวจสอบประเภทข้อมูลต้องเป็นตัวเลข
+    if (typeof price !== "number" || typeof discountPercentage !== "number") {
+      throw new Error("Price and discount percentage must be numbers.");
+    }
+
+ตรวจสอบค่าของ discountPercentage เพื่อป้องกันข้อผิดพลาด
+
+if (discountPercentage > 100) {  
+  throw new Error("Discount percentage cannot be greater than 100.");
+}
+
+
+กำหนดรูปแบบค่าผลลัพธ์ให้แน่นอน
+
+// ผลลัพธ์เป็นทศยม 2 ตำแหน่ง
+    return discountedPrice.toFixed(2);
+
+สรุป
+ฟังก์ชัน calculateDiscount นี้มีการคำนวณส่วนลดด้วยการรับค่าราคาตั้งต้นและเปอร์เซ็นต์ส่วนลดที่เป็นเลขจำนวนบวกโดยตรวจสอบให้แน่ใจว่าราคาและเปอร์เซ็นต์ส่วนลดมีความถูกต้อง สิ่งที่ควรปรับปรุงอาจเป็นการเพิ่มการตรวจสอบข้อมูลเพิ่มเติม หรือการรองรับกรณีที่เกิดขึ้นผิดพลาดได้มากขึ้น เช่น การจัดการค่าที่เป็นประเภทข้อมูลที่ไม่ถูกต้อง (เช่น สตริง), ค่าที่รับเข้ามาน้อยกว่า 0

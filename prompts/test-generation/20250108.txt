@@ -1,0 +1,118 @@
+Request
+จงสร้าง test case โดยใช้ภาษา javascript สำหรับทดสอบ function chunkArray ที่กำหนดให้ใน prompt ด้วยการใช้ `vitest`
+array คือ array ที่ต้องการแบ่ง
+size คือจำนวนสมาชิกในแต่ละ array ที่ย่อยๆ
+
+กรณีที่ array ที่รับมาเป็น null หรือ undefined จะมี error "Array cannot be null or undefined."
+หาก array มีขนาดเป็น 0 ผลลัพธ์คือ array ตัวเดิม
+หากใส่ค่า size ที่น้อยกว่า 1 จะได้ error ว่า "Size must be greater than 0"
+
+อธิบายการ test case ที่สร้างเล็กน้อยใน code ไปเลยไม่ต้องมีหัวข้อแยกออกมาต่างหาก
+ไม่จำเป็นต้องมีส่วนของ instruction เพื่อทดสอบ
+มี section ของการสรุปย่อ ๆ ตอนสุดท้าย
+
+export function chunkArray(array, size) {
+  if (!array) {
+    throw new Error("Array cannot be null or undefined.");
+  }
+  if (!size) {
+    throw new Error("Size must be greater than 0.");
+  }
+
+  if (array.length === 0) {
+    return array;
+  }
+  const chunks = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+}
+
+
+Response
+การทดสอบนี้มีจุดประสงค์เพื่อยืนยันความถูกต้องของฟังก์ชัน chunkArray ที่สร้างด้วยภาษา javascript ที่ทำหน้าในการแบ่ง array ตั้งต้นออกเป็น array ย่อยๆ ตามขนาดที่กำหนด
+
+import { describe, it, expect } from 'vitest';
+import { chunkArray } from './path/to/your/function'; // เปลี่ยนเป็น path ที่ถูกต้อง
+
+describe('Testing chunkArray function', () => {
+  
+  // กรณี array เป็น null จะได้ error
+  it('should throw an error when array is null', () => {
+    expect(() => chunkArray(null, 2)).toThrowError("Array cannot be null or undefined.");
+  });
+  
+  // array เป็น undefined จะได้ error
+  it('should throw an error when array is undefined', () => {
+    expect(() => chunkArray(undefined, 2)).toThrowError("Array cannot be null or undefined.");
+  });
+
+  // ส่ง array เปล่า จะได้ผลลัพธ์เปน array เดิม
+  it('should return the same empty array when input is an empty array', () => {
+    expect(chunkArray([], 2)).toEqual([]);
+  });
+
+  // ขนาดของ array ที่กำหนด มีค่าน้อยกว่า 0
+  it('should throw an error when size is less than 0', () => {
+    expect(() => chunkArray([1, 2, 3], -1)).toThrowError("Size must be greater than 0.");
+  });
+
+  // ขนาดของ array ที่กำหนด มีค่าเป็น 0
+  it('should throw an error when size is equal to 0', () => {
+    expect(() => chunkArray([1, 2, 3], 0)).toThrowError("Size must be greater than 0.");
+  });
+
+  // ทดสอบกรณีที่สามารถแบ่ง array ตามที่กำหนดได้
+  it('should chunk the array correctly based on the given size', () => {
+    expect(chunkArray([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]]);
+    expect(chunkArray([1, 2, 3, 4, 5], 3)).toEqual([[1, 2, 3], [4, 5]]);
+    expect(chunkArray([1, 2, 3], 1)).toEqual([[1], [2], [3]]);
+  });
+
+  // array ตั้งต้นมีสมาชิกเพียงตัวเดียว
+  it('should handle single element array', () => {
+    expect(chunkArray([1], 1)).toEqual([[1]]);
+  });
+
+  // ขนาดของ array ย่อยมีจำนวนใหญ่กว่าขนาดของ array
+  it('should handle a larger size than array length', () => {
+    expect(chunkArray([1, 2, 3], 4)).toEqual([[1, 2, 3]]);
+  });
+});
+
+สรุป
+สรุปการทดสอบ: จาก test case ที่สร้างนั้นมีการทดสอบกรณีต่างๆ
+array ตั้งต้นเป็น null หรือ undefined จะได้ error
+ขนาดของ array ย่อย น้อยกว่า 1 จะได้ error
+กรณีส่ง array ว่างๆ จะได้ ผลลัพธ์เป็น array ว่างเหมือนเดิม
+ใส่ค่าของ array และ size ถูกต้องแล้วสามารถแบ่ง array ได้ถูกต้อง
+การทดสอบกรณี edge case ที่ array มีสมาชิกเดียว
+กรณี edge case ที่ขนาด array ย่อยมีจำนวนใหญ่กว่าขนาดของ array
+test cases เหล่านี้มีการตรวจสอบทุกกรณีที่ครอบคลุมกรณีต่างๆ ทำให้มั่นใจได้ว่า function chunkArray สามารถทำงานได้อย่างถูกต้อง
+
+
+
+
+
+
+
+
+
+
+
+
+Request
+จงสร้าง test case โดยใช้ภาษา javascript และ framework vitest สำหรับทดสอบ function calculateCircleArea เป็นการคำนวนการหาพื้นที่วงกลม โดยที่ค่าของ รัศมีต้องมีค่ามากกว่า 0
+
+อธิบายการ test case ที่สร้างเล็กน้อยใน code ไปเลยไม่ต้องมีหัวข้อแยกออกมาต่างหาก
+ไม่จำเป็นต้องมีส่วนของ instruction เพื่อทดสอบ
+มี section ของคำนำและการสรุปย่อ ๆ ตอนสุดท้าย
+
+export function calculateCircleArea(radius) {
+  if (radius <= 0) {
+    throw new Error("Radius must be a positive number.");
+  }
+  const area = Math.PI * Math.pow(radius, 2);
+  return area.toFixed(2);
+}

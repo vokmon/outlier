@@ -1,0 +1,48 @@
+Request
+จงวิเคราะห์จาก code ตัวอย่างของ function factorial ที่สร้างด้วยภาษา Python นี้ เมื่อมีการใส่เลขที่มีค่ามากเกิน 1000 จะเกิด error
+ให้แสดงผลในรูปแบบ
+introduction, การวิเคราะห์, วิธีแก้ไข และ สรุป
+
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    return 1 if n == 0 else n * factorial(n - 1)
+
+Response
+Function factorial ในที่สร้างด้วยภาษา Python ที่กำหนดให้เป็นคำนวนค่าผลคูณตั้งแต่ 1 จนถึงค่าที่รับเข้ามา โดยใช้วิธีการเขียนแบบ recursion เป็นการเรียกใช้ตัวเองแบบซ้ำๆไปเรื่อยๆ ในกรณีที่ใส่เลขที่มากเกิน 1000 จะเกิด error คือ "RecursionError: maximum recursion depth exceeded in comparison" ซึ่งเกิดจากข้อจำกัดของ Python
+
+การวิเคราะห์
+
+Error ที่เกิดขึ้น"RecursionError: maximum recursion depth exceeded in comparison" เกิดเพราะ 
+
+Python มีการจำกัดจำนวนการเรียก function แบบเรียกตัวเองซ้ำๆ เพื่อป้องกันการใช้ member ที่มากเกินไป
+โดยปกติจะจำกัดการเรียก function แบบซ้ำ ๆ ที่จำนวน 1000 ครั้ง
+มี error "RecursionError: maximum recursion depth exceeded in comparison" เกิดขึ้นในกรณีมีการเรียก function ซ้ำๆ เกินเลขที่จำกัด
+
+วิธีแก้ไข
+ใช้วิธี Iterative แทน Recursive:
+เราสามารถทำการคำนวณ Factorial ได้โดยใช้ loop แทนวิธีแบบ recursive
+
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+ปรับค่า maximum recursion depth:
+เราสามารถปรับค่า maximum recursion depth ได้โดยใช้ sys.setrecursionlimit() แต่ทำให้ความปลอดภัยของระบบลดลง, เสี่ยงต่อการเกิดปัญหาทางด้าน memory ได้ และไม่ใช่วิธีที่สามารถจัดการกับค่าที่รับมาได้ดี เพราะ อาจมีการใส่ค่าที่เกินกว่าที่กำหนดได้อีก จึงไม่เป็นวิธีที่แนะนำ 
+
+
+import sys
+sys.setrecursionlimit(10000)  # ปรับระยะกว้างของการทำการเรียกฟังก์ชัน recursive
+
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    return 1 if n == 0 else n * factorial(n - 1)
+
+สรุป
+
+Error "RecursionError: maximum recursion depth exceeded in comparison" เกิดจากข้อจำกัดของ Python ในการทำการเรียกฟังก์ชันแบบ recursive โดยวิธีที่แนะนำที่ดีที่สุดในการแก้ไขปัญหานี้ควรเปลี่ยนมาใช้วิธี Iterative แทนด้วยการใช้ loop ซึ่งจะมีความปลอดภัยสูงและให้ประสิทธิภาพที่ดีกว่า

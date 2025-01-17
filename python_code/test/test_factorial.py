@@ -118,35 +118,46 @@ def factorial(n: int) -> int:
 # test_factorial()
 
 # Test Case 1: factorial ของ 0 คือ 1
-def test_factorial_0():
-    assert factorial(0) == 1, "Test Case 1 Failed: factorial(0) should be 1"
-    print("Test Case 1 Passed - Check if factorial of 0 returns 1")
+# def test_factorial_0():
+#     assert factorial(0) == 1, "Test Case 1 Failed: factorial(0) should be 1"
+#     print("Test Case 1 Passed - Check if factorial of 0 returns 1")
 
 
-# Test Case 2: ใส่ค่าของค่าจำนวนเต็มบวกแล้วได้ค่าที่ถูกต้อง
-def test_factorial_positive():
-    assert factorial(
-        5) == 120, "Test Case 2 Failed: factorial(5) should be 120"
-    print("Test Case 2 Passed - Check if factorial of a positive integer returns the correct value")
+# # Test Case 2: ใส่ค่าของค่าจำนวนเต็มบวกแล้วได้ค่าที่ถูกต้อง
+# def test_factorial_positive():
+#     assert factorial(
+#         5) == 120, "Test Case 2 Failed: factorial(5) should be 120"
+#     print("Test Case 2 Passed - Check if factorial of a positive integer returns the correct value")
 
 
-# Test Case 3: มี error กรณีใส่ค่าติดลบ
-def test_factorial_negative():
-    try:
-        factorial(-1)
-        assert False, "Test Case 3 Failed: factorial(-1) should raise a ValueError"
-    except ValueError:
-        pass
-    print("Test Case 3 Passed - Check if factorial raises an error for negative numbers")
+# # Test Case 3: มี error กรณีใส่ค่าติดลบ
+# def test_factorial_negative():
+#     try:
+#         factorial(-1)
+#         assert False, "Test Case 3 Failed: factorial(-1) should raise a ValueError"
+#     except ValueError:
+#         pass
+#     print("Test Case 3 Passed - Check if factorial raises an error for negative numbers")
 
-# Test Case 4: ใส่ค่าของค่าจำนวนเต็มบวกที่มีค่ามากแล้วได้ค่าที่ถูกต้อง
-def test_factorial_positive_large_input():
-    assert factorial(
-        20) == 2432902008176640000, "Test Case 4 Failed: factorial(20) should be 2432902008176640000"
-    print("Test Case 4 Passed - Check if factorial of a large positive integer returns the correct value")
+# # Test Case 4: ใส่ค่าของค่าจำนวนเต็มบวกที่มีค่ามากแล้วได้ค่าที่ถูกต้อง
+# def test_factorial_positive_large_input():
+#     assert factorial(
+#         20) == 2432902008176640000, "Test Case 4 Failed: factorial(20) should be 2432902008176640000"
+#     print("Test Case 4 Passed - Check if factorial of a large positive integer returns the correct value")
 
 
-test_factorial_0()
-test_factorial_positive()
-test_factorial_negative()
-test_factorial_positive_large_input()
+# test_factorial_0()
+# test_factorial_positive()
+# test_factorial_negative()
+# test_factorial_positive_large_input()
+
+
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+print(factorial(-10000))

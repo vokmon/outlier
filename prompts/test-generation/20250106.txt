@@ -1,0 +1,14 @@
+Request
+จงสร้าง test case โดยใช้ภาษา python สำหรับทดสอบ function format_number ที่กำหนดให้ใน prompt ด้วยการใช้ `unittest`
+
+รูปแบบของผลลัพธ์จะเป็น #,###.## มีทศนิยม 2 ตำแหน่งเสมอ
+
+อธิบายการ test case ที่สร้างเล็กน้อย code ไม่ต้องมีหัวข้อแยกออกมาต่างหาก
+ไม่จำเป็นต้องมีส่วนของ instruction เพื่อทดสอบ
+มี section ของการสรุปย่อ ๆ ตอนสุดท้าย
+
+
+def format_number(number: float) -> str:
+    if number is None:
+        return ""
+    return f"{number:,.2f}"
